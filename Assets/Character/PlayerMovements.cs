@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerMovements : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Animator anim;
     private float horizontal;
-    private bool isFacingRight = true;
 
     [SerializeField] private float baseSpeed;
     [SerializeField] private float baseJump;
@@ -16,6 +16,7 @@ public class PlayerMovements : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -42,12 +43,7 @@ public class PlayerMovements : MonoBehaviour
 
     private void Flip()
     {
-        if (isFacingRight && horizontal < 0f || isFacingRight && horizontal > 0f)
-        {
-            isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
-        }
+        anim.SetBool("goRight", horizontal > 0);
+        anim.SetBool("goLeft", horizontal < 0);
     }
 }

@@ -1,1 +1,43 @@
-{}
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "BasicGameplay",
+            "id": "72e3304c-4b14-4011-997c-116cb2586c43",
+            "actions": [
+                {
+                    "name": "Walking",
+                    "type": "Value",
+                    "id": "b39b1c9f-23fc-4a90-8dc5-3ebe493d98d7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jumping",
+                    "type": "Button",
+                    "id": "d2530371-9109-47de-8c65-60fdd1f521c3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "480d30b3-e76c-42fd-9b72-73fc34e24cc5",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jumping",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
