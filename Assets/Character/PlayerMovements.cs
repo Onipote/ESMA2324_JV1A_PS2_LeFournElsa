@@ -42,6 +42,7 @@ public class PlayerMovements : MonoBehaviour
 
         horizontal = Input.GetAxisRaw("Horizontal");
 
+        //Jump
         if (isGrounded() && !Input.GetButton("Jump"))
         {
             doubleJump = false;
@@ -61,8 +62,10 @@ public class PlayerMovements : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
+        //Flip sprite
         Flip();
-
+        
+        //Dash
         if (Input.GetKeyDown(KeyCode.E) && canDash)
         {
             StartCoroutine(Dash());
@@ -76,11 +79,20 @@ public class PlayerMovements : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         if (isDashing)
         {
             return;
         }
+
+        /*if (isGrounded() && Input.GetKey(KeyCode.LeftShift))
+        {
+            baseSpeed = baseSpeed / 2;
+            Debug.Log(baseSpeed);
+        }*/
+
         rb.velocity = new Vector2(horizontal * baseSpeed, rb.velocity.y);
+
     }
 
     private void Flip()

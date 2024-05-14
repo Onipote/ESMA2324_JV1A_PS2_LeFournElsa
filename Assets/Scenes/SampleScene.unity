@@ -844,12 +844,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseSpeed: 10
-  baseJump: 8
+  baseJump: 12
+  tr: {fileID: 2069924398}
   groundCheck: {fileID: 476589834}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  tr: {fileID: 2069924398}
 --- !u!111 &2069924396
 Animation:
   m_ObjectHideFlags: 0
