@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovements : MonoBehaviour
 {
+    //Basic settings
     private Rigidbody2D rb;
     private Animator anim;
     private float horizontal;
@@ -11,15 +12,21 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private float baseSpeed;
     [SerializeField] private float baseJump;
 
+    //Dash
     private bool canDash = true;
     private bool isDashing;
     private float dashingPower = 24f;
     private float dashingTime = 0.2f;
     private float dashingCooldown = 1f;
+    [SerializeField] private TrailRenderer tr;
 
+    //Double-jump
+    private bool doubleJump;
+
+    //Ground check
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private TrailRenderer tr;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,11 +39,26 @@ public class PlayerMovements : MonoBehaviour
         {
             return;
         }
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButton("Jump") && isGrounded())
+        if (isGrounded() && !Input.GetButton("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, baseJump);
+            doubleJump = false;
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded() || doubleJump)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, baseJump);
+                doubleJump = !doubleJump;
+            }
+        }
+
+        if (Input.GetButtonDown("Jump") && rb.velocity.y > 0f)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
         Flip();
