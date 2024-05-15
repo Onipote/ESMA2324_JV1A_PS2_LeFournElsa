@@ -844,6 +844,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseSpeed: 10
+  walkSpeed: 3
+  currentSpeed: 0
   baseJump: 12
   tr: {fileID: 2069924398}
   groundCheck: {fileID: 476589834}

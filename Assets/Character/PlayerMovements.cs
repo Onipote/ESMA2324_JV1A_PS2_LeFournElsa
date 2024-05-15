@@ -9,8 +9,16 @@ public class PlayerMovements : MonoBehaviour
     private Animator anim;
     private float horizontal;
 
+    //Basic walk and cat walk
     [SerializeField] private float baseSpeed;
+    [SerializeField] private float walkSpeed;
+    private float currentSpeed;
+
+    //Jump, basic double jump and discrete double jump
     [SerializeField] private float baseJump;
+    [SerializeField] private float discreteJump;
+    private bool doubleJump;
+    private float currentJump;
 
     //Dash
     private bool canDash = true;
@@ -20,9 +28,6 @@ public class PlayerMovements : MonoBehaviour
     private float dashingCooldown = 1f;
     [SerializeField] private TrailRenderer tr;
 
-    //Double-jump
-    private bool doubleJump;
-
     //Ground check
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
@@ -31,41 +36,51 @@ public class PlayerMovements : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        currentSpeed = baseSpeed;
+        currentJump = baseJump;
     }
 
     void Update()
     {
+        horizontal = Input.GetAxisRaw("Horizontal");
+
+
+        //Cat walk
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            currentSpeed = walkSpeed;
+        }
+        else
+        {
+            currentSpeed = baseSpeed;
+        }
+
+        //Jump
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded())
+            {
+                rb.velocity = new Vector2(rb.velocity.x, baseJump);
+            }
+        }
+
+        //Normal double jump
+
+
+        //Discrete double jump
+
+        //Flip sprite
+
+        Flip();
+
+        //Dash
+
         if (isDashing)
         {
             return;
         }
-
-        horizontal = Input.GetAxisRaw("Horizontal");
-
-        //Jump
-        if (isGrounded() && !Input.GetButton("Jump"))
-        {
-            doubleJump = false;
-        }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            if (isGrounded() || doubleJump)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, baseJump);
-                doubleJump = !doubleJump;
-            }
-        }
-
-        if (Input.GetButtonDown("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-
-        //Flip sprite
-        Flip();
         
-        //Dash
         if (Input.GetKeyDown(KeyCode.E) && canDash)
         {
             StartCoroutine(Dash());
@@ -91,8 +106,7 @@ public class PlayerMovements : MonoBehaviour
             Debug.Log(baseSpeed);
         }*/
 
-        rb.velocity = new Vector2(horizontal * baseSpeed, rb.velocity.y);
-
+        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
     }
 
     private void Flip()
