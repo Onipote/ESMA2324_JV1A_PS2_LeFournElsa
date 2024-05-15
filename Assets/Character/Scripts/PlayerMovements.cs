@@ -25,8 +25,18 @@ public class PlayerMovements : MonoBehaviour
     private bool isDashing;
     private float dashingPower = 24f;
     private float dashingTime = 0.2f;
-    private float dashingCooldown = 3f;
+    private float dashingCooldown = 1.5f;
     [SerializeField] private TrailRenderer tr;
+
+    //Breakable doors
+    [SerializeField] private GameObject breakableDoors;
+    [SerializeField] private LayerMask bdLayer;
+    public bool isTouchingBD;
+
+    //Water check & effect
+    [SerializeField] private float waterSpeed;
+    [SerializeField] private float waterJump;
+    [SerializeField] private LayerMask waterLayer;
 
     //Ground check
     [SerializeField] private Transform groundCheck;
@@ -68,14 +78,26 @@ public class PlayerMovements : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
-            Basic_JDJ();
+            if (isGrounded || jumpCount < 2) //2 = max jumps
+            {
+                rb.velocity = new Vector2(rb.velocity.x, baseJump);
+                jumpCount++;
+                Debug.Log("basic jump");
+                //TO ADD : sound
+            }
         }
 
         //Discrete jump and double jump
 
         if (Input.GetButtonDown("Jump") && Input.GetKey(KeyCode.LeftShift))
         {
-            Discrete_JDJ();
+            if (isGrounded || jumpCount < 2) //2 = max jumps
+            {
+                rb.velocity = new Vector2(rb.velocity.x, discreteJump);
+                jumpCount++;
+                Debug.Log("discrete jump");
+                //TO ADD : sound
+            }
         }
 
         //Dash
@@ -91,33 +113,22 @@ public class PlayerMovements : MonoBehaviour
         }
     }
 
-    public void Basic_JDJ()
-    {
-        if (isGrounded || jumpCount < 2) //2 = max jumps
-        {
-            rb.velocity = new Vector2(rb.velocity.x, baseJump);
-            jumpCount++;
-            Debug.Log("basic jump");
-            //TO ADD : sound
-        }
-    }
-
-    public void Discrete_JDJ()
-    {
-        if (isGrounded || jumpCount < 2) //2 = max jumps
-        {
-            rb.velocity = new Vector2(rb.velocity.x, discreteJump);
-            jumpCount++;
-            Debug.Log("discrete jump");
-            //TO ADD : sound
-        }
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = true;
             jumpCount = 0; //Counter reset for double jump
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("BreakableDoors"))
+        {
+            isTouchingBD = true;
+
+            if (isDashing && isTouchingBD)
+            {
+                BreakDoors();
+            }
         }
     }
 
@@ -126,6 +137,11 @@ public class PlayerMovements : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = false;
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("BreakableDoors"))
+        {
+            isTouchingBD = false;
         }
     }
 
@@ -154,9 +170,6 @@ public class PlayerMovements : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
 
-        /*Determining dash direction based on horizontal input
-        float dashDirection = Mathf.Sign(horizontal);*/
-
         rb.velocity = new Vector2(facedDirection * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
@@ -164,5 +177,11 @@ public class PlayerMovements : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    private void BreakDoors()
+    {
+        Destroy(breakableDoors);
+        Debug.Log("c kc");
     }
 }
