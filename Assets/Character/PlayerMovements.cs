@@ -8,6 +8,7 @@ public class PlayerMovements : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private float horizontal;
+    private int facedDirection;
 
     //Walk
     [SerializeField] private float baseSpeed;
@@ -42,7 +43,16 @@ public class PlayerMovements : MonoBehaviour
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
+        Flip(); //Flip sprite
 
+        if (horizontal > 0)
+        {
+            facedDirection = 1;
+        }
+        else if (horizontal < 0)
+        {
+            facedDirection = -1;
+        }
 
         //Cat walk
         if (Input.GetKey(KeyCode.LeftShift))
@@ -79,10 +89,6 @@ public class PlayerMovements : MonoBehaviour
                 //TO ADD : sound
             }
         }
-
-        //Flip sprite
-
-        Flip();
 
         //Dash
 
@@ -139,9 +145,10 @@ public class PlayerMovements : MonoBehaviour
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
 
-        float dashDirection = Mathf.Sign(horizontal);
+        /*Determining dash direction based on horizontal input
+        float dashDirection = Mathf.Sign(horizontal);*/
 
-        rb.velocity = new Vector2(dashDirection * dashingPower, 0f);
+        rb.velocity = new Vector2(facedDirection * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         rb.gravityScale = originalGravity;
