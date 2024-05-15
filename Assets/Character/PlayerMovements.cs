@@ -138,7 +138,10 @@ public class PlayerMovements : MonoBehaviour
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * dashingPower, 0f);
+
+        float dashDirection = Mathf.Sign(horizontal);
+
+        rb.velocity = new Vector2(dashDirection * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         rb.gravityScale = originalGravity;
