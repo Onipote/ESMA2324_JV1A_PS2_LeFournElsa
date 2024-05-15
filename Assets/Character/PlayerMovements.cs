@@ -14,11 +14,11 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private float walkSpeed;
     private float currentSpeed;
 
-    //Jump, basic double jump and discrete double jump
+    //Basic jump and discrete jump, basic double jump and discrete double jump
     [SerializeField] private float baseJump;
     [SerializeField] private float discreteJump;
-    private bool doubleJump;
     private float currentJump;
+    public int jumpCount = 0;
 
     //Dash
     private bool canDash = true;
@@ -31,6 +31,7 @@ public class PlayerMovements : MonoBehaviour
     //Ground check
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    public bool isGrounded;
 
     void Start()
     {
@@ -55,20 +56,16 @@ public class PlayerMovements : MonoBehaviour
             currentSpeed = baseSpeed;
         }
 
-        //Jump
+        //Jump and basic double jump
 
         if (Input.GetButtonDown("Jump"))
         {
-            if (isGrounded())
+            if (isGrounded || jumpCount < 2) //2 = max jumps
             {
-                rb.velocity = new Vector2(rb.velocity.x, baseJump);
+                rb.velocity = new Vector2(rb.velocity.x, currentJump);
+                jumpCount++;
             }
         }
-
-        //Normal double jump
-
-
-        //Discrete double jump
 
         //Flip sprite
 
@@ -87,25 +84,34 @@ public class PlayerMovements : MonoBehaviour
         }
     }
 
-    private bool isGrounded()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = true;
+
+            //Counter reset for double jump
+            jumpCount = 0;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 
     private void FixedUpdate()
     {
-
+        //Dash
         if (isDashing)
         {
             return;
         }
 
-        /*if (isGrounded() && Input.GetKey(KeyCode.LeftShift))
-        {
-            baseSpeed = baseSpeed / 2;
-            Debug.Log(baseSpeed);
-        }*/
-
+        //Walk
         rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
     }
 
