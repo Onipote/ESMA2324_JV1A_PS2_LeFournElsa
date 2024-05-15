@@ -9,15 +9,14 @@ public class PlayerMovements : MonoBehaviour
     private Animator anim;
     private float horizontal;
 
-    //Basic walk and cat walk
+    //Walk
     [SerializeField] private float baseSpeed;
     [SerializeField] private float walkSpeed;
     private float currentSpeed;
 
-    //Basic jump and discrete jump, basic double jump and discrete double jump
+    //Jump and double jump
     [SerializeField] private float baseJump;
     [SerializeField] private float discreteJump;
-    private float currentJump;
     public int jumpCount = 0;
 
     //Dash
@@ -38,7 +37,6 @@ public class PlayerMovements : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
-        currentJump = baseJump;
     }
 
     void Update()
@@ -56,14 +54,29 @@ public class PlayerMovements : MonoBehaviour
             currentSpeed = baseSpeed;
         }
 
-        //Jump and basic double jump
+        //Basic jump and double jump
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
             if (isGrounded || jumpCount < 2) //2 = max jumps
             {
-                rb.velocity = new Vector2(rb.velocity.x, currentJump);
+                rb.velocity = new Vector2(rb.velocity.x, baseJump);
                 jumpCount++;
+                Debug.Log("basic jump");
+                //TO ADD : sound
+            }
+        }
+
+        //Discrete jump and double jump
+
+        if (Input.GetButtonDown("Jump") && Input.GetKey(KeyCode.LeftShift))
+        {
+            if (isGrounded || jumpCount < 2) //2 = max jumps
+            {
+                rb.velocity = new Vector2(rb.velocity.x, discreteJump);
+                jumpCount++;
+                Debug.Log("discrete jump");
+                //TO ADD : sound
             }
         }
 
@@ -89,9 +102,7 @@ public class PlayerMovements : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = true;
-
-            //Counter reset for double jump
-            jumpCount = 0;
+            jumpCount = 0; //Counter reset for double jump
         }
     }
 
