@@ -6,7 +6,7 @@ public class PlayerMovements : MonoBehaviour
 {
     //Basic settings
     private Rigidbody2D rb;
-    private Animator anim;
+    //private Animator anim;
     private float horizontal;
     private int facedDirection;
 
@@ -25,7 +25,7 @@ public class PlayerMovements : MonoBehaviour
     private bool isDashing;
     private float dashingPower = 24f;
     private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
+    private float dashingCooldown = 3f;
     [SerializeField] private TrailRenderer tr;
 
     //Ground check
@@ -36,14 +36,14 @@ public class PlayerMovements : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        //anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
     }
 
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
-        Flip(); //Flip sprite
+        //Flip(); //Flip sprite
 
         if (horizontal > 0)
         {
@@ -68,26 +68,14 @@ public class PlayerMovements : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
-            if (isGrounded || jumpCount < 2) //2 = max jumps
-            {
-                rb.velocity = new Vector2(rb.velocity.x, baseJump);
-                jumpCount++;
-                Debug.Log("basic jump");
-                //TO ADD : sound
-            }
+            Basic_JDJ();
         }
 
         //Discrete jump and double jump
 
         if (Input.GetButtonDown("Jump") && Input.GetKey(KeyCode.LeftShift))
         {
-            if (isGrounded || jumpCount < 2) //2 = max jumps
-            {
-                rb.velocity = new Vector2(rb.velocity.x, discreteJump);
-                jumpCount++;
-                Debug.Log("discrete jump");
-                //TO ADD : sound
-            }
+            Discrete_JDJ();
         }
 
         //Dash
@@ -103,6 +91,27 @@ public class PlayerMovements : MonoBehaviour
         }
     }
 
+    public void Basic_JDJ()
+    {
+        if (isGrounded || jumpCount < 2) //2 = max jumps
+        {
+            rb.velocity = new Vector2(rb.velocity.x, baseJump);
+            jumpCount++;
+            Debug.Log("basic jump");
+            //TO ADD : sound
+        }
+    }
+
+    public void Discrete_JDJ()
+    {
+        if (isGrounded || jumpCount < 2) //2 = max jumps
+        {
+            rb.velocity = new Vector2(rb.velocity.x, discreteJump);
+            jumpCount++;
+            Debug.Log("discrete jump");
+            //TO ADD : sound
+        }
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -132,11 +141,11 @@ public class PlayerMovements : MonoBehaviour
         rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
     }
 
-    private void Flip()
+    /*private void Flip()
     {
         anim.SetBool("goRight", horizontal > 0);
         anim.SetBool("goLeft", horizontal < 0);
-    }
+    }*/
     
     private IEnumerator Dash()
     {

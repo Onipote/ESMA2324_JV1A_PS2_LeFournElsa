@@ -11,25 +11,23 @@ public class PlayerFightingSkills : MonoBehaviour
     public PlayerMovements pm;
 
     //Damages according to the attack
-    [SerializeField] private float baseScratch; //when walking + attack
-    [SerializeField] private float lightScratch; //when jumping + attack
-    [SerializeField] private float heavyScratch; //when running + attack
-    private float currentStrenght;
-
-    void Start()
-    {
-        
-    }
+    private float baseScratch; //while walking + attack
+    private float lightScratch; //while jumping + attack
+    private float heavyScratch; //while running + attack
 
     void Update()
     {
-        if (pm.isGrounded && Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1"))
+        if (pm.isGrounded && Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1")) //while walking
         {
             baseS_Attack(facedDirection);
         }
-        if (pm.isGrounded && Input.GetButtonDown("Fire1"))
+        else if (!pm.isGrounded && Input.GetButtonDown("Fire1")) //while jumping
         {
             lightS_Attack(facedDirection);
+        }
+        else if (pm.isGrounded && Input.GetButtonDown("Fire1"))
+        {
+            heavyS_Attack(facedDirection);
         }
     }
 
@@ -49,5 +47,4 @@ public class PlayerFightingSkills : MonoBehaviour
         heavyScratch = UnityEngine.Random.Range(45, 100);
         Debug.Log("Heavy scratch : " + heavyScratch);
     }
-
 }
