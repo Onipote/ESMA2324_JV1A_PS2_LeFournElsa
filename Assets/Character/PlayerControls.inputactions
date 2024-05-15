@@ -37,6 +37,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Fighting",
+            "id": "5d2446a1-a598-4799-8f0b-4dbdf52dc553",
+            "actions": [
+                {
+                    "name": "ScratchAttack",
+                    "type": "Button",
+                    "id": "82b0eba9-5c96-43fd-b599-8f329f700a49",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "86a3fa1c-0c5c-47ab-b16c-852a2c69c78c",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScratchAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
