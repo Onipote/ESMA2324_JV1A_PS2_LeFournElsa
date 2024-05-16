@@ -9,6 +9,7 @@ TagManager:
   - Wotw
   - RocketBoots
   - OnlyDashArea
+  - OnlyDJumpArea
   layers:
   - Default
   - TransparentFX

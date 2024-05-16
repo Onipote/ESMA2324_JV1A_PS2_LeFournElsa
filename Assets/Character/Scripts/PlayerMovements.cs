@@ -44,6 +44,11 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private GameObject breakableDoors;
     public bool isTouchingBD;
 
+    [Header("Collapse")]
+    [SerializeField] private GameObject collapse;
+    public Rigidbody2D rocksRb;
+    public bool isTouchingCollTrigger = false;
+
     [Header("Water check & effect")]
     [SerializeField] private LayerMask waterLayer;
     [SerializeField] private Transform waterRespawn;
@@ -166,6 +171,11 @@ public class PlayerMovements : MonoBehaviour
                 TimerEndedHappyEnd();
             }
         }
+
+        if (isTouchingCollTrigger)
+        {
+            rocksRb.gravityScale = 3;
+        }
     }
 
     private void FixedUpdate()
@@ -216,6 +226,11 @@ public class PlayerMovements : MonoBehaviour
         if (other.gameObject.CompareTag("Water"))
         {
             inWater = true;
+        }
+
+        if (other.gameObject.CompareTag("OnlyDJumpArea"))
+        {
+            isTouchingCollTrigger = true;
         }
     }
 
