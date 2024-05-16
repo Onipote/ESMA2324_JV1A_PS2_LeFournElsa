@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PlayerMovements : MonoBehaviour
 {
+    public static PlayerMovements instance;
+
     //Basic settings
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     //private Animator anim;
     private float horizontal;
-    private int facedDirection;
+
+    //Flip
+    private SpriteRenderer sr;
+    public float lastDirection = 1f;
 
     //Walk
     [SerializeField] private float baseSpeed;
@@ -18,9 +23,10 @@ public class PlayerMovements : MonoBehaviour
     //Jump and double jump
     [SerializeField] private float baseJump;
     [SerializeField] private float discreteJump;
-    public int jumpCount = 0;
+    public int jumpCounter = 0;
 
     //Dash
+    private bool powerUpFound = false;
     private bool canDash = true;
     private bool isDashing;
     private float dashingPower = 24f;
@@ -28,9 +34,11 @@ public class PlayerMovements : MonoBehaviour
     private float dashingCooldown = 1.5f;
     [SerializeField] private TrailRenderer tr;
 
+    //Will-o'-the-wisp (collectable)
+    public int wotwCounter = 0;
+
     //Breakable doors
     [SerializeField] private GameObject breakableDoors;
-    [SerializeField] private LayerMask bdLayer;
     public bool isTouchingBD;
 
     //Water check & effect
@@ -43,9 +51,18 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     public bool isGrounded;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         //anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
     }
@@ -53,15 +70,27 @@ public class PlayerMovements : MonoBehaviour
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
-        //Flip(); //Flip sprite
 
-        if (horizontal > 0)
+        /*if (horizontal > 0)
         {
-            facedDirection = 1;
+            lastDirection = 1; //right
+
         }
         else if (horizontal < 0)
         {
-            facedDirection = -1;
+            lastDirection = -1; //left
+        }*/
+
+        //Flip
+        if (horizontal != 0)
+        {
+            lastDirection = horizontal;
+            FlipSpriteBasedOnDirection(horizontal);
+        }
+        else
+        {
+            // Maintain the last known direction
+            FlipSpriteBasedOnDirection(lastDirection);
         }
 
         //Cat walk
@@ -78,10 +107,10 @@ public class PlayerMovements : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
-            if (isGrounded || jumpCount < 2) //2 = max jumps
+            if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
                 rb.velocity = new Vector2(rb.velocity.x, baseJump);
-                jumpCount++;
+                jumpCounter++;
                 Debug.Log("basic jump");
                 //TO ADD : sound
             }
@@ -91,26 +120,34 @@ public class PlayerMovements : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && Input.GetKey(KeyCode.LeftShift))
         {
-            if (isGrounded || jumpCount < 2) //2 = max jumps
+            if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
                 rb.velocity = new Vector2(rb.velocity.x, discreteJump);
-                jumpCount++;
+                jumpCounter++;
                 Debug.Log("discrete jump");
                 //TO ADD : sound
             }
         }
 
-        //Dash
-
         if (isDashing)
         {
             return;
         }
-        
-        if (Input.GetKeyDown(KeyCode.E) && canDash)
+
+        if (powerUpFound && Input.GetKeyDown(KeyCode.E) && canDash)
         {
             StartCoroutine(Dash());
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isDashing)
+        {
+            return;
+        }
+
+        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -118,10 +155,27 @@ public class PlayerMovements : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = true;
-            jumpCount = 0; //Counter reset for double jump
+            jumpCounter = 0; //Counter reset for double jump
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Wotw"))
+        {
+            Destroy(other.gameObject);
+            wotwCounter++;
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("BreakableDoors"))
+        if (other.gameObject.CompareTag("OnlyDashArea"))
         {
             isTouchingBD = true;
 
@@ -132,45 +186,27 @@ public class PlayerMovements : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    public void FlipSpriteBasedOnDirection(float horizontal)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (horizontal < 0)
         {
-            isGrounded = false;
+            sr.flipX = true;
+            //anim
         }
-
-        if (collision.gameObject.layer == LayerMask.NameToLayer("BreakableDoors"))
+        else if (horizontal > 0)
         {
-            isTouchingBD = false;
+            sr.flipX = false;
+            //anim
         }
     }
 
-    private void FixedUpdate()
-    {
-        //Dash
-        if (isDashing)
-        {
-            return;
-        }
-
-        //Walk
-        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
-    }
-
-    /*private void Flip()
-    {
-        anim.SetBool("goRight", horizontal > 0);
-        anim.SetBool("goLeft", horizontal < 0);
-    }*/
-    
     private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-
-        rb.velocity = new Vector2(facedDirection * dashingPower, 0f);
+        rb.velocity = new Vector2(lastDirection * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         rb.gravityScale = originalGravity;
@@ -182,6 +218,10 @@ public class PlayerMovements : MonoBehaviour
     private void BreakDoors()
     {
         Destroy(breakableDoors);
-        Debug.Log("c kc");
+    }
+
+    public void SetPowerUpFound(bool state)
+    {
+        this.powerUpFound = state;
     }
 }
