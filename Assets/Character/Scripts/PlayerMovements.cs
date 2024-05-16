@@ -42,9 +42,11 @@ public class PlayerMovements : MonoBehaviour
     public bool isTouchingBD;
 
     //Water check & effect
-    [SerializeField] private float waterSpeed;
-    [SerializeField] private float waterJump;
     [SerializeField] private LayerMask waterLayer;
+    [SerializeField] private bool inWater;
+    private float waterTimer = 1f;
+    private float timeRemaining;
+    private bool isTimerRunning = false;
 
     //Ground check
     [SerializeField] private Transform groundCheck;
@@ -138,6 +140,27 @@ public class PlayerMovements : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
+
+        //TIMER WATER
+        if (inWater)
+        {
+            StartTimer(waterTimer);
+        }
+
+        if (isTimerRunning)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                Debug.Log(timeRemaining);
+            }
+            else
+            {
+                isTimerRunning = false;
+                timeRemaining = 0;
+                TimerEnded();
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -184,9 +207,24 @@ public class PlayerMovements : MonoBehaviour
                 BreakDoors();
             }
         }
+
+        if (other.gameObject.CompareTag("Water"))
+        {
+            Debug.Log("in");
+            inWater = true;
+        }
     }
 
-    public void FlipSpriteBasedOnDirection(float horizontal)
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Water"))
+        {
+            Debug.Log("out");
+            inWater = false;
+            waterTimer = 0f;
+        }
+    }
+        public void FlipSpriteBasedOnDirection(float horizontal)
     {
         if (horizontal < 0)
         {
@@ -223,5 +261,17 @@ public class PlayerMovements : MonoBehaviour
     public void SetPowerUpFound(bool state)
     {
         this.powerUpFound = state;
+    }
+
+    public void StartTimer(float duration)
+    {
+        timeRemaining = duration;
+        isTimerRunning = true;
+    }
+
+    private void TimerEnded()
+    {
+        Debug.Log("Argh ! It's cold...");
+        //Respawn out of water
     }
 }
