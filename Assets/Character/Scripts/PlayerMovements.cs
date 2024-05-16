@@ -6,26 +6,29 @@ public class PlayerMovements : MonoBehaviour
 {
     public static PlayerMovements instance;
 
-    //Basic settings
+    [Header("Basic settings")]
     public Rigidbody2D rb;
     //private Animator anim;
     private float horizontal;
+    private float vertical;
 
-    //Flip
+    [Header("Flip")]
     private SpriteRenderer sr;
     public float lastDirection = 1f;
 
-    //Walk
+    [Header("Walk")]
     [SerializeField] private float baseSpeed;
     [SerializeField] private float walkSpeed;
     private float currentSpeed;
 
-    //Jump and double jump
+    [Header("Jump and double jump")]
     [SerializeField] private float baseJump;
     [SerializeField] private float discreteJump;
     public int jumpCounter = 0;
+    [SerializeField] private int fallGravScale;
+    [SerializeField] private int baseGravScale;
 
-    //Dash
+    [Header("Dash")]
     private bool powerUpFound = false;
     private bool canDash = true;
     private bool isDashing;
@@ -34,21 +37,23 @@ public class PlayerMovements : MonoBehaviour
     private float dashingCooldown = 1.5f;
     [SerializeField] private TrailRenderer tr;
 
-    //Will-o'-the-wisp (collectable)
+    [Header("Will-o'-the-wisp")]
     public int wotwCounter = 0;
 
-    //Breakable doors
+    [Header("Breakable doors")]
     [SerializeField] private GameObject breakableDoors;
     public bool isTouchingBD;
 
-    //Water check & effect
+    [Header("Water check & effect")]
     [SerializeField] private LayerMask waterLayer;
+    [SerializeField] private Transform waterRespawn;
+    [SerializeField] private float waterTimerReset = 5f;
     [SerializeField] private bool inWater;
-    private float waterTimer = 1f;
+    private float waterTimer;
     private float timeRemaining;
     private bool isTimerRunning = false;
 
-    //Ground check
+    [Header("Ground")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     public bool isGrounded;
@@ -67,12 +72,13 @@ public class PlayerMovements : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         //anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
+        waterTimer = waterTimerReset;
     }
 
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
-
+        vertical = Input.GetAxisRaw("Vertical");
         /*if (horizontal > 0)
         {
             lastDirection = 1; //right
@@ -106,11 +112,12 @@ public class PlayerMovements : MonoBehaviour
         }
 
         //Basic jump and double jump
-
+        
         if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
             if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
+                Grav();
                 rb.velocity = new Vector2(rb.velocity.x, baseJump);
                 jumpCounter++;
                 Debug.Log("basic jump");
@@ -118,18 +125,13 @@ public class PlayerMovements : MonoBehaviour
             }
         }
 
-        //Discrete jump and double jump
-
-        if (Input.GetButtonDown("Jump") && Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetButtonUp("Jump"))
         {
-            if (isGrounded || jumpCounter < 2) //2 = max jumps
-            {
-                rb.velocity = new Vector2(rb.velocity.x, discreteJump);
-                jumpCounter++;
-                Debug.Log("discrete jump");
-                //TO ADD : sound
-            }
+            rb.gravityScale = fallGravScale;
+            Invoke("Grav", 0.5f);
         }
+
+        //Discrete jump and double jump
 
         if (isDashing)
         {
@@ -142,23 +144,26 @@ public class PlayerMovements : MonoBehaviour
         }
 
         //TIMER WATER
-        if (inWater)
+        if (inWater && !isTimerRunning)
         {
             StartTimer(waterTimer);
         }
 
         if (isTimerRunning)
         {
-            if (timeRemaining > 0)
+            if (timeRemaining > 0 && inWater)
             {
                 timeRemaining -= Time.deltaTime;
                 Debug.Log(timeRemaining);
             }
-            else
+            else if (timeRemaining <= 0 && inWater)
             {
-                isTimerRunning = false;
                 timeRemaining = 0;
-                TimerEnded();
+                TimerEndedRespawn();
+            }
+            else if (timeRemaining > 0 && !inWater)
+            {
+                TimerEndedHappyEnd();
             }
         }
     }
@@ -210,7 +215,6 @@ public class PlayerMovements : MonoBehaviour
 
         if (other.gameObject.CompareTag("Water"))
         {
-            Debug.Log("in");
             inWater = true;
         }
     }
@@ -219,12 +223,11 @@ public class PlayerMovements : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Water"))
         {
-            Debug.Log("out");
             inWater = false;
-            waterTimer = 0f;
         }
     }
-        public void FlipSpriteBasedOnDirection(float horizontal)
+
+    public void FlipSpriteBasedOnDirection(float horizontal)
     {
         if (horizontal < 0)
         {
@@ -237,7 +240,10 @@ public class PlayerMovements : MonoBehaviour
             //anim
         }
     }
-
+    private void Grav()
+    {
+        rb.gravityScale = baseGravScale;
+    }
     private IEnumerator Dash()
     {
         canDash = false;
@@ -269,9 +275,21 @@ public class PlayerMovements : MonoBehaviour
         isTimerRunning = true;
     }
 
-    private void TimerEnded()
+    private void TimerEndedRespawn()
     {
+        //Respawn (& lost light) because not out of water
+        rb.transform.position = waterRespawn.transform.position;
+        isTimerRunning = false;
+        inWater = false;
         Debug.Log("Argh ! It's cold...");
-        //Respawn out of water
+        waterTimer = waterTimerReset;
+    }
+    private void TimerEndedHappyEnd()
+    {
+        //Timer stopped because out of water
+        isTimerRunning = false;
+        inWater = false;
+        Debug.Log("Hehe.. I'm not afraid anymore !");
+        waterTimer = waterTimerReset;
     }
 }
