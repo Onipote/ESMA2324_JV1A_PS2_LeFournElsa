@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovements : MonoBehaviour
 {
     public static PlayerMovements instance;
-
+    
     [Header("Basic settings")]
     public Rigidbody2D rb;
     //private Animator anim;
@@ -19,14 +19,25 @@ public class PlayerMovements : MonoBehaviour
     [Header("Walk")]
     [SerializeField] private float baseSpeed;
     [SerializeField] private float walkSpeed;
-    private float currentSpeed;
+    [SerializeField] private float currentSpeed;
 
     [Header("Jump and double jump")]
     [SerializeField] private float baseJump;
-    [SerializeField] private float discreteJump;
+    [SerializeField] private float waterJump;
+    [SerializeField] private float currentJump;
     public int jumpCounter = 0;
     [SerializeField] private int fallGravScale;
     [SerializeField] private int baseGravScale;
+
+    /*[Header("Wall jumping")]
+    private bool isWallJumping;
+
+    [Header("Wall sliding")]
+    [SerializeField] private bool isWallSliding;
+    [SerializeField] private float wallSlidingSpeed = 2f;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private LayerMask wallLayer;
+    public bool isWalled;*/
 
     [Header("Dash")]
     private bool powerUpFound = false;
@@ -39,6 +50,7 @@ public class PlayerMovements : MonoBehaviour
 
     [Header("Will-o'-the-wisp")]
     public int wotwCounter = 0;
+    private PlayerCoatSystem pcs;
 
     [Header("Breakable doors")]
     [SerializeField] private GameObject breakableDoors;
@@ -75,8 +87,10 @@ public class PlayerMovements : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        pcs = GetComponent<PlayerCoatSystem>();
         //anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
+        currentJump = baseJump;
         waterTimer = waterTimerReset;
     }
 
@@ -93,18 +107,6 @@ public class PlayerMovements : MonoBehaviour
         {
             lastDirection = -1; //left
         }*/
-
-        //Flip
-        if (horizontal != 0)
-        {
-            lastDirection = horizontal;
-            FlipSpriteBasedOnDirection(horizontal);
-        }
-        else
-        {
-            // Maintain the last known direction
-            FlipSpriteBasedOnDirection(lastDirection);
-        }
 
         //Cat walk
         if (Input.GetKey(KeyCode.LeftShift))
@@ -123,7 +125,7 @@ public class PlayerMovements : MonoBehaviour
             if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
                 Grav();
-                rb.velocity = new Vector2(rb.velocity.x, baseJump);
+                rb.velocity = new Vector2(rb.velocity.x, currentJump);
                 jumpCounter++;
                 Debug.Log("basic jump");
                 //TO ADD : sound
@@ -136,8 +138,6 @@ public class PlayerMovements : MonoBehaviour
             Invoke("Grav", 0.5f);
         }
 
-        //Discrete jump and double jump
-
         if (isDashing)
         {
             return;
@@ -149,6 +149,16 @@ public class PlayerMovements : MonoBehaviour
         }
 
         //TIMER WATER
+        if (inWater)
+        {
+            currentSpeed = walkSpeed;
+            currentJump = waterJump;
+        }
+        else if (!inWater)
+        {
+            currentJump = baseJump;
+        }
+
         if (inWater && !isTimerRunning)
         {
             StartTimer(waterTimer);
@@ -195,6 +205,11 @@ public class PlayerMovements : MonoBehaviour
             isGrounded = true;
             jumpCounter = 0; //Counter reset for double jump
         }
+
+        /*if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            isWalled = true;
+        }*/
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -203,6 +218,11 @@ public class PlayerMovements : MonoBehaviour
         {
             isGrounded = false;
         }
+
+        /*if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            isWalled = false;
+        }*/
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -211,6 +231,7 @@ public class PlayerMovements : MonoBehaviour
         {
             Destroy(other.gameObject);
             wotwCounter++;
+            pcs.AddWotw();
         }
 
         if (other.gameObject.CompareTag("OnlyDashArea"))
@@ -226,6 +247,7 @@ public class PlayerMovements : MonoBehaviour
         if (other.gameObject.CompareTag("Water"))
         {
             inWater = true;
+            
         }
 
         if (other.gameObject.CompareTag("OnlyDJumpArea"))
@@ -259,6 +281,20 @@ public class PlayerMovements : MonoBehaviour
     {
         rb.gravityScale = baseGravScale;
     }
+
+    /*private void WallSlide()
+    {
+        if (isWalled && !isGrounded && horizontal != 0)
+        {
+            isWallSliding = true;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }*/
+
     private IEnumerator Dash()
     {
         canDash = false;
