@@ -11,6 +11,8 @@ TagManager:
   - OnlyDashArea
   - OnlyDJumpArea
   - Box
+  - PointA
+  - PointB
   layers:
   - Default
   - TransparentFX
@@ -22,7 +24,7 @@ TagManager:
   - BreakableDoors
   - Wall
   - Box
-  - 
+  - Points
   - 
   - 
   - 

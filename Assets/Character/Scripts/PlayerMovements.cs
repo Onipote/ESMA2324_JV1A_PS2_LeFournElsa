@@ -108,6 +108,13 @@ public class PlayerMovements : MonoBehaviour
             lastDirection = -1; //left
         }*/
 
+        if (isDashing)
+        {
+            return;
+        }
+
+        FlipSpriteBasedOnDirection(horizontal);
+
         //Cat walk
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -136,11 +143,6 @@ public class PlayerMovements : MonoBehaviour
         {
             rb.gravityScale = fallGravScale;
             Invoke("Grav", 0.5f);
-        }
-
-        if (isDashing)
-        {
-            return;
         }
 
         if (powerUpFound && Input.GetKeyDown(KeyCode.E) && canDash)
@@ -184,7 +186,7 @@ public class PlayerMovements : MonoBehaviour
 
         if (isTouchingCollTrigger)
         {
-            rocksRb.gravityScale = 3;
+            rocksRb.gravityScale = 10;
         }
     }
 

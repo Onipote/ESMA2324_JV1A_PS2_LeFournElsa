@@ -10,13 +10,14 @@ public class CursedLight : MonoBehaviour
 
     [Header("Cursed light settings")]
     [SerializeField] private float defDistanceRay = 100;
-    Vector3 currentEulerAngles;
-    float z;
-    public float rotationSpeed;
     public LineRenderer lr;
     public Transform cursedLightPoint;
     Transform m_transform;
-    private bool autoRotate = false;
+
+    [Header("Rotation")]
+    [SerializeField] private Rigidbody2D eye;
+    [SerializeField] private float rotationSpeed = 45f;
+    private bool isGoingRight = true;
 
     private void Awake()
     {
@@ -26,22 +27,29 @@ public class CursedLight : MonoBehaviour
     private void Update()
     {
         ShootLight();
-
-        currentEulerAngles += new Vector3(0, 0, z) * Time.deltaTime * rotationSpeed;
-        transform.localEulerAngles = currentEulerAngles;
+        ChangeDirection();
     }
 
-    public void TurnX()
-    {
-        z = -1;
-    }
     void ShootLight()
     {
         RaycastHit2D _hit = Physics2D.Raycast(m_transform.position, transform.right);
+        //eye.AddTorque(rotationSpeed, ForceMode2D.Force);
+        
+        if (_hit.collider.CompareTag("PointA"))
+        {
+            isGoingRight = true;
+        }
+        else if (_hit.collider.CompareTag("PointB"))
+        {
+            isGoingRight = false;
+        }
+
+
         if (_hit)
         {
-            Draw2DRay(cursedLightPoint.position, _hit.point);
-            if (_hit.collider.CompareTag("Player"))
+            Draw2DRay(cursedLightPoint.position, _hit.point); //ray between initial pos and hit point
+
+            if (_hit.collider.CompareTag("Player")) //effect on player if he's touched by the ray
             {
                 PlayerMovements.instance.rb.transform.position = eyesCaveRespawn.transform.position;
                 Debug.Log("Ugh.. My ears are burning !!");
@@ -52,7 +60,19 @@ public class CursedLight : MonoBehaviour
             Draw2DRay(cursedLightPoint.position, cursedLightPoint.transform.right * defDistanceRay);
         }
     }
-
+    //this.transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+    //this.transform.Rotate(Vector3.back, rotationSpeed* Time.deltaTime);
+    void ChangeDirection()
+    {
+        if (isGoingRight)
+        {
+            this.transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            this.transform.Rotate(Vector3.back, rotationSpeed * Time.deltaTime);
+        }
+    }
     void Draw2DRay(Vector2 startPos, Vector2 endPos)
     {
         lr.SetPosition(0, startPos);
