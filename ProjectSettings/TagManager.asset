@@ -10,6 +10,7 @@ TagManager:
   - RocketBoots
   - OnlyDashArea
   - OnlyDJumpArea
+  - Box
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Enemy
   - BreakableDoors
   - Wall
-  - 
+  - Box
   - 
   - 
   - 
