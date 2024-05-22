@@ -138,7 +138,6 @@ public class PlayerMovements : MonoBehaviour
             Invoke("Grav", 0.5f);
         }
 
-        //Dash
         if (isDashing)
         {
             return;
@@ -149,7 +148,7 @@ public class PlayerMovements : MonoBehaviour
             StartCoroutine(Dash());
         }
 
-        //Water effect
+        //TIMER WATER
         if (inWater)
         {
             currentSpeed = walkSpeed;
