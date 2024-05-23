@@ -55,11 +55,6 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private GameObject breakableDoors;
     public bool isTouchingBD;
 
-    [Header("Breakable rocks")]
-    [SerializeField] private Rigidbody2D breakableRocks;
-    private float fallDelay = 1f;
-    private float destroyDelay = 2f;
-
     [Header("Collapse")]
     [SerializeField] private GameObject collapse;
     public Rigidbody2D rocksRb;
@@ -209,11 +204,6 @@ public class PlayerMovements : MonoBehaviour
             isGrounded = true;
             jumpCounter = 0; //Counter reset for double jump
         }
-
-        if (collision.gameObject.CompareTag("BreakableRock"))
-        {
-            StartCoroutine(Fall());
-        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -296,12 +286,6 @@ public class PlayerMovements : MonoBehaviour
         canDash = true;
     }
 
-    private IEnumerator Fall()
-    {
-        yield return new WaitForSeconds(fallDelay);
-        breakableRocks.bodyType = RigidbodyType2D.Dynamic;
-        Destroy(gameObject, destroyDelay);
-    }
     private void BreakDoors()
     {
         Destroy(breakableDoors);
