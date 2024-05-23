@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class CursedLight : MonoBehaviour
 {
+    public static CursedLight instance;
+
     [Header("Payer's info")]
     [SerializeField] private GameObject player;
     [SerializeField] private Transform eyesCaveRespawn;
+    public bool isBurnt = false;
 
     [Header("Cursed light settings")]
     [SerializeField] private float defDistanceRay = 100;
@@ -22,6 +25,11 @@ public class CursedLight : MonoBehaviour
     private void Awake()
     {
         m_transform = GetComponent<Transform>();
+
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     private void Update()
@@ -47,17 +55,20 @@ public class CursedLight : MonoBehaviour
 
         if (_hit)
         {
+            isBurnt = true;
             Draw2DRay(cursedLightPoint.position, _hit.point); //ray between initial pos and hit point
 
             if (_hit.collider.CompareTag("Player")) //effect on player if he's touched by the ray
             {
                 PlayerMovements.instance.rb.transform.position = eyesCaveRespawn.transform.position;
                 Debug.Log("Ugh.. My ears are burning !!");
+                isBurnt = false;
             }
         }
         else
         {
             Draw2DRay(cursedLightPoint.position, cursedLightPoint.transform.right * defDistanceRay);
+            isBurnt = false;
         }
     }
     //this.transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);

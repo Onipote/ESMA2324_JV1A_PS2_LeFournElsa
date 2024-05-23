@@ -13,6 +13,7 @@ TagManager:
   - Box
   - PointA
   - PointB
+  - BreakableRock
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - BreakableDoors
   - Wall
   - Box
-  - Points
+  - BreakableRocks
   - 
   - 
   - 
