@@ -14,7 +14,7 @@ public class PlayerMovements : MonoBehaviour
 
     [Header("Flip")]
     private SpriteRenderer sr;
-    public float lastDirection = 1f;
+    public int lastDirection = 1;
 
     [Header("Walk")]
     public float baseSpeed;
@@ -96,15 +96,17 @@ public class PlayerMovements : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
-        /*if (horizontal > 0)
+        if (horizontal > 0)
         {
             lastDirection = 1; //right
+            Debug.Log("last dir :" + lastDirection);
 
         }
         else if (horizontal < 0)
         {
             lastDirection = -1; //left
-        }*/
+            Debug.Log("last dir :" + lastDirection);
+        }
 
         if (isDashing)
         {
@@ -180,11 +182,6 @@ public class PlayerMovements : MonoBehaviour
                 TimerEndedHappyEnd();
             }
         }
-
-        if (isTouchingCollTrigger)
-        {
-            rocksRb.gravityScale = 10;
-        }
     }
 
     private void FixedUpdate()
@@ -255,22 +252,24 @@ public class PlayerMovements : MonoBehaviour
 
     public void FlipSpriteBasedOnDirection(float horizontal)
     {
-        if (horizontal < 0)
+        if (horizontal < 0) //watching to the right
         {
             sr.flipX = true;
             //anim
         }
-        else if (horizontal > 0)
+        else if (horizontal > 0) //watching to the left
         {
             sr.flipX = false;
             //anim
         }
     }
+
     private void Grav()
     {
         rb.gravityScale = baseGravScale;
     }
 
+    //Power-up : Dash
     private IEnumerator Dash()
     {
         canDash = false;
@@ -286,16 +285,19 @@ public class PlayerMovements : MonoBehaviour
         canDash = true;
     }
 
+    //Breakable doors
     private void BreakDoors()
     {
         Destroy(breakableDoors);
     }
 
+    //PowerUp : Dash (Rocket boots found)
     public void SetPowerUpFound(bool state)
     {
         this.powerUpFound = state;
     }
 
+    //WATER PART (timer, effects)
     public void StartTimer(float duration)
     {
         timeRemaining = duration;

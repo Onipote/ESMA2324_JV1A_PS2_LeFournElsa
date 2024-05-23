@@ -13,6 +13,8 @@ TagManager:
   - Box
   - PointA
   - PointB
+  - RightHB
+  - LeftHB
   layers:
   - Default
   - TransparentFX

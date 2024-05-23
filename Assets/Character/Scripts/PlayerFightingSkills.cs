@@ -4,47 +4,94 @@ using UnityEngine;
 
 public class PlayerFightingSkills : MonoBehaviour
 {
-    private int facedDirection;
+    public static PlayerFightingSkills instance;
+
     public GameObject rightHitbox;
     public GameObject leftHitbox;
 
     public PlayerMovements pm;
 
     //Damages according to the attack
-    private float baseScratch; //while walking + attack
-    private float lightScratch; //while jumping + attack
-    private float heavyScratch; //while running + attack
+    private float baseScratch; //while running/jumping + attack
+    private float heavyScratch; //while walking + attack
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Update()
     {
         if (pm.isGrounded && Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1")) //while walking
         {
-            baseS_Attack(facedDirection);
+            heavyS_Attack();
+        }
+        else if (pm.isGrounded && !Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1")) //while running
+        {
+            baseS_Attack();
         }
         else if (!pm.isGrounded && Input.GetButtonDown("Fire1")) //while jumping
         {
-            lightS_Attack(facedDirection);
+            baseS_Attack();
         }
-        else if (pm.isGrounded && Input.GetButtonDown("Fire1"))
+    }
+
+    public void baseS_Attack()
+    {
+        if (IsMouseOnRight())
         {
-            heavyS_Attack(facedDirection);
+            Debug.Log("Activating right hitbox for base attack.");
+            rightHitbox.SetActive(true);
         }
+        else
+        {
+            Debug.Log("Activating left hitbox for base attack.");
+            leftHitbox.SetActive(true);
+        }
+        baseScratch = UnityEngine.Random.Range(15, 70);
+        Debug.Log("atk " + baseScratch);
+        DisableHitboxes();
     }
 
-    public void baseS_Attack(int id)
+    public void heavyS_Attack()
     {
-        baseScratch = UnityEngine.Random.Range(15,70);
-        Debug.Log("Base scratch : " + baseScratch);
-    }
-
-    public void lightS_Attack(int id)
-    {
-        lightScratch = UnityEngine.Random.Range(1, 30);
-        Debug.Log("Light scratch : " + lightScratch);
-    }
-    public void heavyS_Attack(int id)
-    {
+        if (IsMouseOnRight())
+        {
+            Debug.Log("Activating right hitbox for heavy attack.");
+            rightHitbox.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Activating left hitbox for heavy attack.");
+            leftHitbox.SetActive(true);
+        }
         heavyScratch = UnityEngine.Random.Range(45, 100);
-        Debug.Log("Heavy scratch : " + heavyScratch);
+        Debug.Log("atk " + heavyScratch);
+        DisableHitboxes();
+    }
+
+    private bool IsMouseOnRight()
+    {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return mousePosition.x > transform.position.x;
+    }
+
+    public void DisableHitboxes()
+    {
+        StartCoroutine(DisableHitboxesCoroutine());
+    }
+
+    private IEnumerator DisableHitboxesCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f); // Wait for 0.1 seconds before disabling
+        rightHitbox.SetActive(false);
+        leftHitbox.SetActive(false);
     }
 }
