@@ -99,13 +99,11 @@ public class PlayerMovements : MonoBehaviour
         if (horizontal > 0)
         {
             lastDirection = 1; //right
-            Debug.Log("last dir :" + lastDirection);
 
         }
         else if (horizontal < 0)
         {
             lastDirection = -1; //left
-            Debug.Log("last dir :" + lastDirection);
         }
 
         if (isDashing)

@@ -14,6 +14,7 @@ public class PlayerFightingSkills : MonoBehaviour
     //Damages according to the attack
     private float baseScratch; //while running/jumping + attack
     private float heavyScratch; //while walking + attack
+    public float currentDamage;
 
     void Awake()
     {
@@ -25,6 +26,11 @@ public class PlayerFightingSkills : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        currentDamage = 0;
     }
 
     void Update()
@@ -47,15 +53,15 @@ public class PlayerFightingSkills : MonoBehaviour
     {
         if (IsMouseOnRight())
         {
-            Debug.Log("Activating right hitbox for base attack.");
             rightHitbox.SetActive(true);
         }
         else
         {
-            Debug.Log("Activating left hitbox for base attack.");
             leftHitbox.SetActive(true);
         }
+
         baseScratch = UnityEngine.Random.Range(15, 70);
+        currentDamage += baseScratch;
         Debug.Log("atk " + baseScratch);
         DisableHitboxes();
     }
@@ -64,15 +70,15 @@ public class PlayerFightingSkills : MonoBehaviour
     {
         if (IsMouseOnRight())
         {
-            Debug.Log("Activating right hitbox for heavy attack.");
             rightHitbox.SetActive(true);
         }
         else
         {
-            Debug.Log("Activating left hitbox for heavy attack.");
             leftHitbox.SetActive(true);
         }
+
         heavyScratch = UnityEngine.Random.Range(45, 100);
+        currentDamage += heavyScratch;
         Debug.Log("atk " + heavyScratch);
         DisableHitboxes();
     }
@@ -93,5 +99,10 @@ public class PlayerFightingSkills : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Wait for 0.1 seconds before disabling
         rightHitbox.SetActive(false);
         leftHitbox.SetActive(false);
+    }
+
+    private void ResetDamage()
+    {
+        currentDamage = 0;
     }
 }

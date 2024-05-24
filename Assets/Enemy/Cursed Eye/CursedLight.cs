@@ -41,7 +41,6 @@ public class CursedLight : MonoBehaviour
     void ShootLight()
     {
         RaycastHit2D _hit = Physics2D.Raycast(m_transform.position, transform.right);
-        //eye.AddTorque(rotationSpeed, ForceMode2D.Force);
         
         if (_hit.collider.CompareTag("PointA"))
         {
@@ -71,8 +70,7 @@ public class CursedLight : MonoBehaviour
             isBurnt = false;
         }
     }
-    //this.transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
-    //this.transform.Rotate(Vector3.back, rotationSpeed* Time.deltaTime);
+
     void ChangeDirection()
     {
         if (isGoingRight)
