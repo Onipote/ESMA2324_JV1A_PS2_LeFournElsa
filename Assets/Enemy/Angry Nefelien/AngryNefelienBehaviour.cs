@@ -90,7 +90,7 @@ public class AngryNefelienBehaviour : MonoBehaviour
         {
             PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn
             Debug.Log("GAME OVER"); //end message
-            PlayerHealth.instance.currentHealth = maxHealth; //reset health
+            PlayerHealth.instance.currentHealth = PlayerHealth.instance.maxHealth; //reset health
         }
     }
 

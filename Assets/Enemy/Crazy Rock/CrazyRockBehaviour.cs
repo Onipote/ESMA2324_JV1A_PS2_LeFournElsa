@@ -16,6 +16,7 @@ public class CrazyRockBehaviour : MonoBehaviour
     public GameObject rockPrefab;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float speed;
+    public float currentDamage;
 
     private void Awake()
     {
@@ -27,9 +28,11 @@ public class CrazyRockBehaviour : MonoBehaviour
 
     void Update()
     {
+        //Rotate
         this.transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
         timeUntilFire += Time.deltaTime;
 
+        //Shoot
         if (timeUntilFire >= 1f / rockPerSec)
         {
             Shoot();
@@ -42,6 +45,7 @@ public class CrazyRockBehaviour : MonoBehaviour
         //Create a new rock from prefab at spawnpoint
         Instantiate(rockPrefab, spawnPoint.position, spawnPoint.transform.rotation);
         rbCR.velocity = spawnPoint.right * speed;
+        currentDamage = UnityEngine.Random.Range(1, 15);
         Debug.Log("shoot");
     }
 }
