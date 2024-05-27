@@ -46,6 +46,5 @@ public class CrazyRockBehaviour : MonoBehaviour
         Instantiate(rockPrefab, spawnPoint.position, spawnPoint.transform.rotation);
         rbCR.velocity = spawnPoint.right * speed;
         currentDamage = UnityEngine.Random.Range(1, 15);
-        Debug.Log("shoot");
     }
 }

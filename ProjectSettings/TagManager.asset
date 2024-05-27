@@ -22,7 +22,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - Enemy
+  - Player
   - BreakableDoors
   - Wall
   - Box
