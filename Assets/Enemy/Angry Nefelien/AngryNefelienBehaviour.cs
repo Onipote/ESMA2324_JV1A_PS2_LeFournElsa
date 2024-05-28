@@ -29,9 +29,9 @@ public class AngryNefelienBehaviour : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] Transform startRespawn;
     [SerializeField] private float attackSpeed;
-    [SerializeField] private float currentDamage;
+    [SerializeField] private int currentDamage;
     private float distance;
-
+    s
     private void Awake()
     {
         if (instance == null)
@@ -77,20 +77,10 @@ public class AngryNefelienBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Attack
-        if (collision.gameObject.CompareTag("Player") && PlayerHealth.instance.currentHealth >= 0)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (!PlayerHealth.instance.isInvulnerable) //if  is'nt invulnerable
-            {
-                PlayerHealth.instance.currentHealth = Mathf.Clamp(PlayerHealth.instance.currentHealth -= currentDamage, 0, PlayerHealth.instance.maxHealth); //can take damage
-                PlayerHealth.instance.TakeDamage(); //takes damage, becomes invulnerable and changes sprite color
-                Debug.Log("Player HP :" + PlayerHealth.instance.currentHealth);
-            }
-        }
-        if (PlayerHealth.instance.currentHealth == 0)
-        {
-            PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn
-            Debug.Log("GAME OVER"); //end message
-            PlayerHealth.instance.currentHealth = PlayerHealth.instance.maxHealth; //reset health
+            PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
+            player.TakeDamage(currentDamage);
         }
     }
 

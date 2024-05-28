@@ -113,7 +113,7 @@ public class PlayerCoatSystem : MonoBehaviour
         currentRange = Mathf.Clamp(currentRange - lostLight, 0, 1000);
         coat.pointLightOuterRadius = currentRange;
 
-        PlayerMovements.instance.wotwCounter -= lostLight;
+        PlayerMovements.instance.wotwCounter = Mathf.Clamp(PlayerMovements.instance.wotwCounter - lostLight, 0, 1000);
             
         Debug.Log($"Updated light: Intensity = {currentIntensity}, Range = {currentRange}");
     }

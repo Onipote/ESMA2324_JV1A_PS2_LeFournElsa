@@ -16,6 +16,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Color invulnerableColor = Color.red;
     private Color originalColor;
+    [SerializeField] private Transform startRespawn;
 
     private void Awake()
     {
@@ -46,15 +47,23 @@ public class PlayerHealth : MonoBehaviour
             }
         }
     }
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
         if (!isInvulnerable)
         {
             ActivateInvulnerability();
-        }
-        else
-        {
-            spriteRenderer.color = originalColor;
+            if (currentHealth > 0)
+            {
+                currentHealth = Mathf.Clamp(currentHealth -= damage, 0, maxHealth);
+                Debug.Log("Player HP :" + currentHealth);
+            }
+            
+            if (currentHealth <= 0)
+            {
+                PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn
+                Debug.Log("GAME OVER"); //end message
+                currentHealth = maxHealth; //reset health
+            }
         }
     }
 

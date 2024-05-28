@@ -59,8 +59,8 @@ public class CursedLight : MonoBehaviour
 
             if (_hit.collider.CompareTag("Player")) //effect on player if he's touched by the ray
             {
-                PlayerMovements.instance.rb.transform.position = eyesCaveRespawn.transform.position;
-                Debug.Log("Ugh.. My ears are burning !!");
+                PlayerHealth player = _hit.collider.gameObject.GetComponent<PlayerHealth>();
+                player.TakeDamage(Random.Range(20,50));
                 isBurnt = false;
             }
         }
