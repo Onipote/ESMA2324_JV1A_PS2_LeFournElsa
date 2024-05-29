@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
     public static PlayerHealth instance;
 
+    [Header("Player's health system)")]
     public float maxHealth = 100;
     public float currentHealth;
 
+    [Header("Player's health system UI)")]
+    [SerializeField] private Image healthBar;
+
+    [Header("Invulnerability's frame")]
     public float invulnerabilityDuration = 1f;
     public bool isInvulnerable = false;
     private float invulnerabilityTimer = 0f;
@@ -46,6 +52,8 @@ public class PlayerHealth : MonoBehaviour
                 spriteRenderer.color = originalColor;
             }
         }
+
+        healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 1);
     }
     public void TakeDamage(int damage)
     {
