@@ -29,16 +29,6 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private int fallGravScale;
     [SerializeField] private int baseGravScale;
 
-    /*[Header("Wall jumping")]
-    private bool isWallJumping;
-
-    [Header("Wall sliding")]
-    [SerializeField] private bool isWallSliding;
-    [SerializeField] private float wallSlidingSpeed = 2f;
-    [SerializeField] private Transform wallCheck;
-    [SerializeField] private LayerMask wallLayer;
-    public bool isWalled;*/
-
     [Header("Dash")]
     private bool powerUpFound = false;
     private bool canDash = true;
@@ -73,6 +63,12 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     public bool isGrounded;
+
+    [Header("Wall")]
+    [SerializeField] private Transform wallCheck;
+    public bool isWalled;
+    public float wallSlideSpeed;
+    public bool isWallSliding;
 
     private void Awake()
     {
@@ -112,6 +108,7 @@ public class PlayerMovements : MonoBehaviour
         }
 
         FlipSpriteBasedOnDirection(horizontal);
+        ProcessWallSlide();
 
         //Cat walk
         if (Input.GetKey(KeyCode.LeftShift))
@@ -199,6 +196,11 @@ public class PlayerMovements : MonoBehaviour
             isGrounded = true;
             jumpCounter = 0; //Counter reset for double jump
         }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            isWalled = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -206,6 +208,11 @@ public class PlayerMovements : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGrounded = false;
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            isWalled = false;
         }
     }
 
@@ -281,6 +288,20 @@ public class PlayerMovements : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    //Power-up : Walljump
+    private void ProcessWallSlide()
+    {
+        if (!isGrounded && isWalled)
+        {
+            isWallSliding = true;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -wallSlideSpeed));
+        }
+        else
+        {
+            isWallSliding = false;
+        }
     }
 
     //Breakable doors
