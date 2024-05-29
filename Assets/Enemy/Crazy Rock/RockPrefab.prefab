@@ -223,7 +223,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rbCR: {fileID: 1200101723609084590}
-  life: 3
+  life: 1.5
   speed: 15
-  player: {fileID: 0}
-  startRespawn: {fileID: 0}
