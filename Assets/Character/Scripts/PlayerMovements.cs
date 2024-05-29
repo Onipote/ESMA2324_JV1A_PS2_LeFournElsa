@@ -38,6 +38,13 @@ public class PlayerMovements : MonoBehaviour
     private float dashingCooldown = 1.5f;
     [SerializeField] private TrailRenderer tr;
 
+    /*[Header("Wall jump")]
+    [SerializeField] private float wallJumpDirection;
+    [SerializeField] private float wallJumpTime = 0.5f;
+    [SerializeField] private float wallJumpTimer;
+    [SerializeField] private Vector2 wallJumpPower = new Vector2(5f, 10f);
+    [SerializeField] private bool isWallJumping;*/
+
     [Header("Will-o'-the-wisp")]
     public float wotwCounter = 0;
 
@@ -66,9 +73,9 @@ public class PlayerMovements : MonoBehaviour
 
     [Header("Wall")]
     [SerializeField] private Transform wallCheck;
-    public bool isWalled;
-    public float wallSlideSpeed;
-    public bool isWallSliding;
+    [SerializeField] private float wallSlideSpeed;
+    [SerializeField] private bool isWalled;
+    [SerializeField] private bool isWallSliding;
 
     private void Awake()
     {
@@ -88,10 +95,21 @@ public class PlayerMovements : MonoBehaviour
         waterTimer = waterTimerReset;
     }
 
+    private void FixedUpdate()
+    {
+        if (isDashing)
+        {
+            return;
+        }
+
+        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
+    }
+
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
+
         if (horizontal > 0)
         {
             lastDirection = 1; //right
@@ -177,16 +195,6 @@ public class PlayerMovements : MonoBehaviour
                 TimerEndedHappyEnd();
             }
         }
-    }
-
-    private void FixedUpdate()
-    {
-        if (isDashing)
-        {
-            return;
-        }
-
-        rb.velocity = new Vector2(horizontal * currentSpeed, rb.velocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

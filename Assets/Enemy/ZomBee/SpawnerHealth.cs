@@ -11,7 +11,7 @@ public class SpawnerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
-    private void OnTriggerEnter2D(PolygonCollider2D collision)
+    /*private void OnTriggerEnter2D(PolygonCollider2D collision)
     {
         Debug.Log("Collision detected with: " + collision.gameObject.name);
 
@@ -29,5 +29,5 @@ public class SpawnerHealth : MonoBehaviour
             Destroy(gameObject);
             Debug.Log("ZomBee's spawner destroyed.");
         }
-    }
+    }*/
 }
