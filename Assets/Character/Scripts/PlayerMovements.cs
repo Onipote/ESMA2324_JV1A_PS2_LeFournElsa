@@ -162,6 +162,11 @@ public class PlayerMovements : MonoBehaviour
             StartCoroutine(Dash());
         }
 
+        if (isTouchingCollTrigger)
+        {
+            rocksRb.gravityScale = 10;
+        }
+
         //TIMER WATER
         if (inWater)
         {
@@ -250,7 +255,7 @@ public class PlayerMovements : MonoBehaviour
             PlayerCoatSystem.instance.RemoveWotw();
         }
 
-        if (other.gameObject.CompareTag("OnlyDJumpArea"))
+        if (other.gameObject.CompareTag("OnlyDashArea"))
         {
             isTouchingCollTrigger = true;
         }
