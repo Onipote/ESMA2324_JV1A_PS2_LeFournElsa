@@ -86,7 +86,7 @@ public class PlayerHealth : MonoBehaviour
             if (currentHealth <= 0)
             {
                 PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn
-                Debug.Log("GAME OVER"); //end message
+                Debug.Log("GAME OVER !!"); //end message
                 currentHealth = maxHealth; //reset health
             }
         }

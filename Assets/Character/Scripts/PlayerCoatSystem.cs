@@ -83,7 +83,6 @@ public class PlayerCoatSystem : MonoBehaviour
                 else if (timeRemaining <= 0 && inDarkness)
                 {
                     timeRemaining = 0;
-
                     timerText.text = timeRemaining.ToString();
 
                     TimerEndedRespawn();
@@ -124,19 +123,23 @@ public class PlayerCoatSystem : MonoBehaviour
 
     private void TimerEndedRespawn()
     {
+        
+
         //Respawn at the beginning (game over) because not out of darkness
         PlayerMovements.instance.rb.transform.position = startRespawn.transform.position;
 
         //Reset light properties
         currentIntensity = baseIntensity;
+        Debug.Log("intensite :" + currentIntensity);
         currentRange = baseRange;
         coat.intensity = currentIntensity;
         coat.pointLightOuterRadius = currentRange;
-
         isDarkTimerRunning = false;
         inDarkness = false;
         Debug.Log("GAME OVER");
         darkTimer = darkTimerReset;
+        timeRemaining = darkTimer;
+        timerText.text = timeRemaining.ToString();
     }
     private void TimerEndedHappyEnd()
     {
@@ -145,5 +148,6 @@ public class PlayerCoatSystem : MonoBehaviour
         inDarkness = false;
         Debug.Log("Hehe.. Too easy !");
         darkTimer = darkTimerReset;
+        timeRemaining = darkTimer;
     }
 }
