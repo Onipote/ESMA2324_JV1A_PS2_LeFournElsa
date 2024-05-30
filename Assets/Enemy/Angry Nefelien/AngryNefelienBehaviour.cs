@@ -81,7 +81,14 @@ public class AngryNefelienBehaviour : MonoBehaviour
         {
             PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
             player.TakeDamage(currentDamage);
+            PlayerCoatSystem.instance.lostLight = 2;
+            PlayerCoatSystem.instance.RemoveWotw();
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        PlayerCoatSystem.instance.lostLight = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

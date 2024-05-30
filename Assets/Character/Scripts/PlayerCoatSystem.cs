@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayerCoatSystem : MonoBehaviour
 {
@@ -13,15 +15,21 @@ public class PlayerCoatSystem : MonoBehaviour
     [SerializeField] private float currentIntensity;
     [SerializeField] private float baseRange = 3f;
     [SerializeField] private float currentRange;
-    [SerializeField] private float lostLight;
+    public float lostLight;
 
     [Header("Dark timer")]
     [SerializeField] private Transform startRespawn;
-    [SerializeField] private float darkTimerReset = 5f;
+    [SerializeField] private float darkTimerReset = 20f;
     public bool inDarkness = false;
-    private float darkTimer;
-    private float timeRemaining;
+    public float darkTimer;
+    public float timeRemaining;
     private bool isDarkTimerRunning = false;
+
+    [Header("Dark timer UI")]
+    [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] Image lightTimer;
+    [SerializeField] private Image imageToBlink;
+    [SerializeField] private float blinkInterval = 0.5f;
 
     private void Awake()
     {
@@ -41,6 +49,7 @@ public class PlayerCoatSystem : MonoBehaviour
             return;
         }
 
+        lostLight = 0;
         currentIntensity = baseIntensity;
         currentRange = baseRange;
         darkTimer = darkTimerReset;
@@ -52,16 +61,6 @@ public class PlayerCoatSystem : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerMovements.instance.inWater)
-        {
-            lostLight = 2.5f;
-        }
-
-        if (CursedLight.instance.isBurnt)
-        {
-            lostLight = 5;
-        }
-
         if (currentIntensity <= 0 && currentRange <= 0)
         {
             inDarkness = true;
@@ -72,7 +71,6 @@ public class PlayerCoatSystem : MonoBehaviour
             if (inDarkness && !isDarkTimerRunning)
             {
                 StartTimer(darkTimer);
-                Debug.Log("1");
             }
 
             if (isDarkTimerRunning)
@@ -80,11 +78,17 @@ public class PlayerCoatSystem : MonoBehaviour
                 if (timeRemaining > 0 && inDarkness)
                 {
                     timeRemaining -= Time.deltaTime;
-                    Debug.Log(timeRemaining);
+                    int seconds = Mathf.FloorToInt(timeRemaining % 60);
+                    StartCoroutine(BlinkLightTimer());
+                    timerText.text = string.Format("{0}", seconds);
+
                 }
                 else if (timeRemaining <= 0 && inDarkness)
                 {
                     timeRemaining = 0;
+
+                    timerText.text = timeRemaining.ToString();
+
                     TimerEndedRespawn();
                 }
                 else if (timeRemaining > 0 && !inDarkness)
@@ -94,15 +98,14 @@ public class PlayerCoatSystem : MonoBehaviour
             }
         }
     }
+    
     public void AddWotw()
     {
         currentIntensity++; //wotwCounter +1 => currentIntensity +1
         coat.intensity = currentIntensity; //change intensity
-        Debug.Log($"NON Updated light: Intensity = {currentIntensity}, Range = {currentRange}");
 
         currentRange = currentRange + (PlayerMovements.instance.wotwCounter * 2);
         coat.pointLightOuterRadius = currentRange; //change outer radius
-        Debug.Log($"Updated light: Intensity = {currentIntensity}, Range = {currentRange}");
     }
 
     public void RemoveWotw()
@@ -114,8 +117,6 @@ public class PlayerCoatSystem : MonoBehaviour
         coat.pointLightOuterRadius = currentRange;
 
         PlayerMovements.instance.wotwCounter = Mathf.Clamp(PlayerMovements.instance.wotwCounter - lostLight, 0, 1000);
-            
-        Debug.Log($"Updated light: Intensity = {currentIntensity}, Range = {currentRange}");
     }
 
     public void StartTimer(float duration)
@@ -147,5 +148,14 @@ public class PlayerCoatSystem : MonoBehaviour
         inDarkness = false;
         Debug.Log("Hehe.. Too easy !");
         darkTimer = darkTimerReset;
+    }
+
+    private IEnumerator BlinkLightTimer()
+    {
+        while (isDarkTimerRunning)
+        {
+            imageToBlink.enabled = !imageToBlink.enabled;
+            yield return new WaitForSeconds(blinkInterval);
+        }
     }
 }

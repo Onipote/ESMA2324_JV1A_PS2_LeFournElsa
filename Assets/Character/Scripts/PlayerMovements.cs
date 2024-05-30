@@ -29,6 +29,9 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private int fallGravScale;
     [SerializeField] private int baseGravScale;
 
+    [Header("Will-o'-the-wisp")]
+    public float wotwCounter = 0;
+
     [Header("Dash")]
     private bool powerUpFound = false;
     private bool canDash = true;
@@ -44,9 +47,6 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private float wallJumpTimer;
     [SerializeField] private Vector2 wallJumpPower = new Vector2(5f, 10f);
     [SerializeField] private bool isWallJumping;*/
-
-    [Header("Will-o'-the-wisp")]
-    public float wotwCounter = 0;
 
     [Header("Breakable doors")]
     [SerializeField] private GameObject breakableDoors;
@@ -246,7 +246,8 @@ public class PlayerMovements : MonoBehaviour
         if (other.gameObject.CompareTag("Water"))
         {
             inWater = true;
-
+            PlayerCoatSystem.instance.lostLight = 1;
+            PlayerCoatSystem.instance.RemoveWotw();
         }
 
         if (other.gameObject.CompareTag("OnlyDJumpArea"))
@@ -260,6 +261,7 @@ public class PlayerMovements : MonoBehaviour
         if (other.gameObject.CompareTag("Water"))
         {
             inWater = false;
+            PlayerCoatSystem.instance.lostLight = 0;
         }
     }
 

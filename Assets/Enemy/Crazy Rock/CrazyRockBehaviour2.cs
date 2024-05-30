@@ -9,6 +9,7 @@ public class CrazyRockBehaviour2 : MonoBehaviour
     [SerializeField] private Rigidbody2D rbCR;
     [SerializeField] private float life;
     [SerializeField] private float speed;
+    public bool isKnocked = false;
 
     private void Awake()
     {
@@ -35,8 +36,15 @@ public class CrazyRockBehaviour2 : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
-            player.TakeDamage(Random.Range(10,15));
+            player.TakeDamage(Random.Range(10, 15)); //HEALTH EFFECT
+            PlayerCoatSystem.instance.lostLight = 1; //LIGHT EFFECT
+            PlayerCoatSystem.instance.RemoveWotw();
             Destroy(gameObject);
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        PlayerCoatSystem.instance.lostLight = 0;
     }
 }

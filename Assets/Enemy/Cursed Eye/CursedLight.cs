@@ -9,7 +9,6 @@ public class CursedLight : MonoBehaviour
     [Header("Payer's info")]
     [SerializeField] private GameObject player;
     [SerializeField] private Transform eyesCaveRespawn;
-    public bool isBurnt = false;
 
     [Header("Cursed light settings")]
     [SerializeField] private float defDistanceRay = 100;
@@ -54,20 +53,20 @@ public class CursedLight : MonoBehaviour
 
         if (_hit)
         {
-            isBurnt = true;
             Draw2DRay(cursedLightPoint.position, _hit.point); //ray between initial pos and hit point
 
             if (_hit.collider.CompareTag("Player")) //effect on player if he's touched by the ray
             {
                 PlayerHealth player = _hit.collider.gameObject.GetComponent<PlayerHealth>();
-                player.TakeDamage(Random.Range(20,50));
-                isBurnt = false;
+                player.TakeDamage(Random.Range(20,50)); //HEALTH EFFECT
+                PlayerCoatSystem.instance.lostLight = 3; //LIGHT EFFECT
+                PlayerCoatSystem.instance.RemoveWotw();
             }
         }
         else
         {
             Draw2DRay(cursedLightPoint.position, cursedLightPoint.transform.right * defDistanceRay);
-            isBurnt = false;
+            PlayerCoatSystem.instance.lostLight = 0;
         }
     }
 

@@ -63,6 +63,7 @@ public class PlayerHealth : MonoBehaviour
             if (currentHealth > 0)
             {
                 currentHealth = Mathf.Clamp(currentHealth -= damage, 0, maxHealth);
+                PlayerMovements.instance.wotwCounter = Mathf.Clamp(PlayerMovements.instance.wotwCounter -= PlayerCoatSystem.instance.lostLight, 0, 1000);
                 Debug.Log("Player HP :" + currentHealth);
             }
             
