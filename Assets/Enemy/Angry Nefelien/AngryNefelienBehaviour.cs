@@ -109,6 +109,7 @@ public class AngryNefelienBehaviour : MonoBehaviour
         }
         if (currentHealth == 0)
         {
+            Instantiate(PlayerHealth.instance.lootMob, collision.gameObject.transform.position, Quaternion.identity);
             Destroy(gameObject);
             Debug.Log("ANGRY NEFELIEN dies.");
         }

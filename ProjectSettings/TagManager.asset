@@ -15,6 +15,7 @@ TagManager:
   - PointB
   - RightHB
   - LeftHB
+  - HealthGem
   layers:
   - Default
   - TransparentFX

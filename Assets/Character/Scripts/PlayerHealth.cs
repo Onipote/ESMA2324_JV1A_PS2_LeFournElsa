@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,8 +20,11 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Color invulnerableColor = Color.red;
     private Color originalColor;
-    [SerializeField] private Transform startRespawn;
 
+    [SerializeField] private Transform startRespawn;
+    public GameObject lootMob;
+    public int gemCounter = 0;
+    public bool gem = false;
     private void Awake()
     {
         if (instance == null)
@@ -54,7 +55,22 @@ public class PlayerHealth : MonoBehaviour
         }
 
         healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 1);
+
+        if (Input.GetButtonDown("Fire2") && gemCounter >= 1)
+        {
+            currentHealth += Mathf.Clamp(currentHealth += Random.Range(20, 30), 0, maxHealth);
+            gemCounter -= 1;
+        }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("HealthGem"))
+        {
+            Destroy(collision.gameObject);
+            gemCounter++;
+        }
+    }
+
     public void TakeDamage(int damage)
     {
         if (!isInvulnerable)
@@ -66,7 +82,7 @@ public class PlayerHealth : MonoBehaviour
                 PlayerMovements.instance.wotwCounter = Mathf.Clamp(PlayerMovements.instance.wotwCounter -= PlayerCoatSystem.instance.lostLight, 0, 1000);
                 Debug.Log("Player HP :" + currentHealth);
             }
-            
+
             if (currentHealth <= 0)
             {
                 PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn

@@ -28,8 +28,6 @@ public class PlayerCoatSystem : MonoBehaviour
     [Header("Dark timer UI")]
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] Image lightTimer;
-    [SerializeField] private Image imageToBlink;
-    [SerializeField] private float blinkInterval = 0.5f;
 
     private void Awake()
     {
@@ -79,7 +77,6 @@ public class PlayerCoatSystem : MonoBehaviour
                 {
                     timeRemaining -= Time.deltaTime;
                     int seconds = Mathf.FloorToInt(timeRemaining % 60);
-                    StartCoroutine(BlinkLightTimer());
                     timerText.text = string.Format("{0}", seconds);
 
                 }
@@ -148,14 +145,5 @@ public class PlayerCoatSystem : MonoBehaviour
         inDarkness = false;
         Debug.Log("Hehe.. Too easy !");
         darkTimer = darkTimerReset;
-    }
-
-    private IEnumerator BlinkLightTimer()
-    {
-        while (isDarkTimerRunning)
-        {
-            imageToBlink.enabled = !imageToBlink.enabled;
-            yield return new WaitForSeconds(blinkInterval);
-        }
     }
 }

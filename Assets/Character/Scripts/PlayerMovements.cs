@@ -75,7 +75,7 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private float wallSlideSpeed;
     [SerializeField] private bool isWalled;
-    [SerializeField] private bool isWallSliding;
+    //[SerializeField] private bool isWallSliding;
 
     private void Awake()
     {
@@ -305,12 +305,12 @@ public class PlayerMovements : MonoBehaviour
     {
         if (!isGrounded && isWalled)
         {
-            isWallSliding = true;
+            //isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -wallSlideSpeed));
         }
         else
         {
-            isWallSliding = false;
+            //isWallSliding = false;
         }
     }
 
