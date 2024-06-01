@@ -6,15 +6,18 @@ public class PlayerFightingSkills : MonoBehaviour
 {
     public static PlayerFightingSkills instance;
 
-    public GameObject rightHitbox;
-    public GameObject leftHitbox;
-
     public PlayerMovements pm;
 
-    //Damages according to the attack
-    private float baseScratch; //while running/jumping + attack
-    private float heavyScratch; //while walking + attack
+    public GameObject rightHitbox;
+    public GameObject leftHitbox;
     public float currentDamage;
+
+    [Header("Base attack")]
+    private float baseScratch; //while running/jumping + attack
+
+    [Header("Heavy attack")]
+    public bool powerUpFound2 = false;
+    private float heavyScratch; //while walking + attack
 
     void Awake()
     {
@@ -35,7 +38,7 @@ public class PlayerFightingSkills : MonoBehaviour
 
     void Update()
     {
-        if (pm.isGrounded && Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1")) //while walking
+        if (powerUpFound2 && pm.isGrounded && Input.GetKey(KeyCode.LeftShift) && Input.GetButtonDown("Fire1")) //while walking
         {
             heavyS_Attack();
         }
@@ -62,8 +65,14 @@ public class PlayerFightingSkills : MonoBehaviour
 
         baseScratch = UnityEngine.Random.Range(15, 70);
         currentDamage += baseScratch;
-        Debug.Log("atk " + baseScratch);
+        Debug.Log("Base attack " + baseScratch);
         DisableHitboxes();
+    }
+
+    //PowerUp : Heavy scratch attack (ClawGloves found)
+    public void SetPowerUpFound2(bool state)
+    {
+        this.powerUpFound2 = state;
     }
 
     public void heavyS_Attack()
@@ -79,7 +88,7 @@ public class PlayerFightingSkills : MonoBehaviour
 
         heavyScratch = UnityEngine.Random.Range(45, 100);
         currentDamage += heavyScratch;
-        Debug.Log("atk " + heavyScratch);
+        Debug.Log("Heavy attack " + heavyScratch);
         DisableHitboxes();
     }
 

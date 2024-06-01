@@ -33,20 +33,13 @@ public class PlayerMovements : MonoBehaviour
     public float wotwCounter = 0;
 
     [Header("Dash")]
-    private bool powerUpFound = false;
+    public bool powerUpFound = false;
     private bool canDash = true;
     private bool isDashing;
     private float dashingPower = 24f;
     private float dashingTime = 0.2f;
     private float dashingCooldown = 1.5f;
     [SerializeField] private TrailRenderer tr;
-
-    /*[Header("Wall jump")]
-    [SerializeField] private float wallJumpDirection;
-    [SerializeField] private float wallJumpTime = 0.5f;
-    [SerializeField] private float wallJumpTimer;
-    [SerializeField] private Vector2 wallJumpPower = new Vector2(5f, 10f);
-    [SerializeField] private bool isWallJumping;*/
 
     [Header("Breakable doors")]
     [SerializeField] private GameObject breakableDoors;
@@ -139,7 +132,6 @@ public class PlayerMovements : MonoBehaviour
         }
 
         //Basic jump and double jump
-
         if (Input.GetButtonDown("Jump") && !Input.GetKey(KeyCode.LeftShift))
         {
             if (isGrounded || jumpCounter < 2) //2 = max jumps
@@ -160,11 +152,6 @@ public class PlayerMovements : MonoBehaviour
         if (powerUpFound && Input.GetKeyDown(KeyCode.E) && canDash)
         {
             StartCoroutine(Dash());
-        }
-
-        if (isTouchingCollTrigger)
-        {
-            rocksRb.gravityScale = 10;
         }
 
         //TIMER WATER
@@ -305,7 +292,7 @@ public class PlayerMovements : MonoBehaviour
         canDash = true;
     }
 
-    //Power-up : Walljump
+    //Wall Sliding
     private void ProcessWallSlide()
     {
         if (!isGrounded && isWalled)
