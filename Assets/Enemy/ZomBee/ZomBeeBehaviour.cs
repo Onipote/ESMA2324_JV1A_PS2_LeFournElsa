@@ -25,7 +25,6 @@ public class ZomBeeBehaviour : MonoBehaviour
     [SerializeField] Transform startRespawn;
     public float attackSpeed;
     public int currentDamage;
-    private float distance;
 
     private void Awake()
     {
@@ -46,9 +45,6 @@ public class ZomBeeBehaviour : MonoBehaviour
     {
         rbZB.velocity = new Vector2(dirX, dirY) * currentSpeed * Time.deltaTime;
         HitDetection();
-
-        distance = Vector2.Distance(transform.position, player.transform.position);
-        Vector2 direction = player.transform.position - transform.position;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
