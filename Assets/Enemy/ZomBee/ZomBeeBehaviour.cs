@@ -44,6 +44,8 @@ public class ZomBeeBehaviour : MonoBehaviour
     private void Update()
     {
         rbZB.velocity = new Vector2(dirX, dirY) * currentSpeed * Time.deltaTime;
+
+
         HitDetection();
     }
 
@@ -52,9 +54,13 @@ public class ZomBeeBehaviour : MonoBehaviour
         //Attack
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
-            player.TakeDamage(currentDamage);
+            AttackPlayer();
         }
+    }
+
+    public void AttackPlayer()
+    {
+        PlayerHealth.instance.TakeDamage(currentDamage);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

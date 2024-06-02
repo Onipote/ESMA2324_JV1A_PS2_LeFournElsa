@@ -18075,6 +18075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 2069924393}
   isChasing: 0
+  hasAttacked: 0
 --- !u!58 &1729136622
 CircleCollider2D:
   m_ObjectHideFlags: 0
