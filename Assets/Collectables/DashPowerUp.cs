@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RocketPowerUp : MonoBehaviour
+public class DashPowerUp : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {

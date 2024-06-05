@@ -169,7 +169,7 @@ public class PlayerMovements : MonoBehaviour
         {
             StartTimer(waterTimer);
         }
-
+        
         if (isTimerRunning)
         {
             if (timeRemaining > 0 && inWater)
@@ -312,7 +312,7 @@ public class PlayerMovements : MonoBehaviour
         Destroy(breakableDoors);
     }
 
-    //PowerUp : Dash (Rocket boots found)
+    //PowerUp : Dash (Dash badge found)
     public void SetPowerUpFound(bool state)
     {
         this.powerUpFound = state;
