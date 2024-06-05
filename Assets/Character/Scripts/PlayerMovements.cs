@@ -8,7 +8,7 @@ public class PlayerMovements : MonoBehaviour
 
     [Header("Basic settings")]
     public Rigidbody2D rb;
-    //private Animator anim;
+    private Animator anim;
     private float horizontal;
     private float vertical;
 
@@ -45,11 +45,6 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private GameObject breakableDoors;
     public bool isTouchingBD;
 
-    [Header("Collapse")]
-    [SerializeField] private GameObject collapse;
-    public Rigidbody2D rocksRb;
-    public bool isTouchingCollTrigger = false;
-
     [Header("Water check & effect")]
     [SerializeField] private LayerMask waterLayer;
     [SerializeField] private Transform waterRespawn;
@@ -82,7 +77,7 @@ public class PlayerMovements : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         currentSpeed = baseSpeed;
         currentJump = baseJump;
         waterTimer = waterTimerReset;
@@ -125,10 +120,13 @@ public class PlayerMovements : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             currentSpeed = walkSpeed;
+            anim.SetBool("walking", true);
         }
         else
         {
             currentSpeed = baseSpeed;
+            anim.SetBool("walking", false);
+
         }
 
         //Basic jump and double jump
@@ -240,11 +238,6 @@ public class PlayerMovements : MonoBehaviour
             inWater = true;
             PlayerCoatSystem.instance.lostLight = 1;
             PlayerCoatSystem.instance.RemoveWotw();
-        }
-
-        if (other.gameObject.CompareTag("OnlyDashArea"))
-        {
-            isTouchingCollTrigger = true;
         }
     }
 
