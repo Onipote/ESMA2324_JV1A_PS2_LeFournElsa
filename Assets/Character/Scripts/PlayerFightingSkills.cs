@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerFightingSkills : MonoBehaviour
 {
     public static PlayerFightingSkills instance;
 
     public PlayerMovements pm;
+    private Animator anim;
 
     public GameObject rightHitbox;
     public GameObject leftHitbox;

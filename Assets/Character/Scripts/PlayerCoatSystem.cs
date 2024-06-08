@@ -102,6 +102,10 @@ public class PlayerCoatSystem : MonoBehaviour
 
         currentRange = currentRange + (PlayerMovements.instance.wotwCounter * 2);
         coat.pointLightOuterRadius = currentRange; //change outer radius
+
+        darkTimer = darkTimerReset;
+        timeRemaining = darkTimer;
+        timerText.text = timeRemaining.ToString();
     }
 
     public void RemoveWotw()
@@ -123,8 +127,6 @@ public class PlayerCoatSystem : MonoBehaviour
 
     private void TimerEndedRespawn()
     {
-        
-
         //Respawn at the beginning (game over) because not out of darkness
         PlayerMovements.instance.rb.transform.position = startRespawn.transform.position;
 

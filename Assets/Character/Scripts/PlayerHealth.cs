@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     public static PlayerHealth instance;
+    private Animator anim;
 
     [Header("Player's health system)")]
     public float maxHealth = 100;
@@ -21,10 +22,11 @@ public class PlayerHealth : MonoBehaviour
     public Color invulnerableColor = Color.red;
     private Color originalColor;
 
-    [SerializeField] private Transform startRespawn;
+    [SerializeField] private Vector3 startRespawn;
     public GameObject lootMob;
     public int gemCounter = 0;
     public bool gem = false;
+
     private void Awake()
     {
         if (instance == null)
@@ -54,7 +56,7 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 1);
+        healthBar.fillAmount = Mathf.Clamp(currentHealth/maxHealth, 0, 1);
 
         if (Input.GetButtonDown("Fire2") && gemCounter >= 1)
         {
@@ -85,7 +87,8 @@ public class PlayerHealth : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                PlayerMovements.instance.rb.transform.position = startRespawn.transform.position; //respawn
+                PlayerMovements.instance.rb.transform.position = startRespawn; //respawn
+                anim.SetBool("dying", (currentHealth<=0));
                 Debug.Log("GAME OVER !!"); //end message
                 currentHealth = maxHealth; //reset health
             }
