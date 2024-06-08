@@ -201,6 +201,15 @@ public class PlayerMovements : MonoBehaviour
         {
             isWalled = true;
         }
+
+        if (collision.gameObject.CompareTag("OnlyDashArea"))
+        {
+            if (isDashing)
+            {
+                isTouchingBD = true;
+                Destroy(collision.gameObject);
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -223,16 +232,6 @@ public class PlayerMovements : MonoBehaviour
             Destroy(other.gameObject);
             wotwCounter++;
             PlayerCoatSystem.instance.AddWotw();
-        }
-
-        if (other.gameObject.CompareTag("OnlyDashArea"))
-        {
-            isTouchingBD = true;
-
-            if (isDashing && isTouchingBD)
-            {
-                BreakDoors();
-            }
         }
 
         if (other.gameObject.CompareTag("Water"))

@@ -49,15 +49,6 @@ public class AngryNefelienBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (isGoingRight)
-        {
-            Flip();
-        }
-        else
-        {
-            Flip();
-        }
-
         distance = Vector2.Distance(transform.position, player.transform.position);
         Vector2 direction = player.transform.position - transform.position;
 
@@ -65,12 +56,13 @@ public class AngryNefelienBehaviour : MonoBehaviour
         {
             currentSpeed = attackSpeed;
             currentDamage = UnityEngine.Random.Range(25, 50);
-            transform.position = Vector2.MoveTowards(this.transform.position, player.transform.position, currentSpeed * Time.deltaTime);
+            isGoingRight = player.transform.position.x > this.transform.position.x;
         }
         else
         {
             currentSpeed = baseSpeed;
         }
+        Flip();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -83,11 +75,6 @@ public class AngryNefelienBehaviour : MonoBehaviour
             PlayerCoatSystem.instance.lostLight = 2;
             PlayerCoatSystem.instance.RemoveWotw();
         }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        PlayerCoatSystem.instance.lostLight = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -127,5 +114,6 @@ public class AngryNefelienBehaviour : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 180, 0);
 
         }
+        Debug.Log(rbAN.velocity.x);
     }
 }
