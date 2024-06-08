@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovements : MonoBehaviour
@@ -126,8 +127,7 @@ public class PlayerMovements : MonoBehaviour
         {
             currentSpeed = baseSpeed;
             anim.SetBool("walking", false);
-            anim.SetBool("running", true);
-
+            anim.SetBool("running", (horizontal != 0));
         }
 
         //Basic jump and double jump
@@ -135,7 +135,6 @@ public class PlayerMovements : MonoBehaviour
         {
             if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
-                anim.SetBool("jumping", true);
                 Grav();
                 rb.velocity = new Vector2(rb.velocity.x, currentJump);
                 jumpCounter++;
@@ -148,6 +147,8 @@ public class PlayerMovements : MonoBehaviour
             rb.gravityScale = fallGravScale;
             Invoke("Grav", 0.5f);
         }
+
+        anim.SetBool("jumping", (!isGrounded));
 
         if (powerUpFound && Input.GetKeyDown(KeyCode.E) && canDash)
         {

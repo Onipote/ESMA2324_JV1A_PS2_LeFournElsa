@@ -12,14 +12,14 @@ public class PlayerCoatSystem : MonoBehaviour
     [Header("Coat system")]
     [SerializeField] private Light2D coat;
     [SerializeField] private float baseIntensity = 1f;
-    [SerializeField] private float currentIntensity;
     [SerializeField] private float baseRange = 3f;
     [SerializeField] private float currentRange;
+    public float currentIntensity;
     public float lostLight;
 
     [Header("Dark timer")]
     [SerializeField] private Transform startRespawn;
-    [SerializeField] private float darkTimerReset = 20f;
+    [SerializeField] private float darkTimerReset = 100f;
     public bool inDarkness = false;
     public float darkTimer;
     public float timeRemaining;
@@ -97,7 +97,7 @@ public class PlayerCoatSystem : MonoBehaviour
     
     public void AddWotw()
     {
-        currentIntensity++; //wotwCounter +1 => currentIntensity +1
+        currentIntensity = Mathf.Clamp(++currentIntensity, 0, 4); //wotwCounter +1 => currentIntensity +1
         coat.intensity = currentIntensity; //change intensity
 
         currentRange = currentRange + (PlayerMovements.instance.wotwCounter * 2);

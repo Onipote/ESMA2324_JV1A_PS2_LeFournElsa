@@ -114,6 +114,5 @@ public class AngryNefelienBehaviour : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 180, 0);
 
         }
-        Debug.Log(rbAN.velocity.x);
     }
 }

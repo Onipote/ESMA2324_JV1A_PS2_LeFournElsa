@@ -349,6 +349,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1070545943390788697, guid: cab916bdb3ce4284d8841d2d8376a724, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1340184906037124722, guid: cab916bdb3ce4284d8841d2d8376a724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -356,10 +360,6 @@ PrefabInstance:
     - target: {fileID: 4691682898178697154, guid: cab916bdb3ce4284d8841d2d8376a724, type: 3}
       propertyPath: m_Name
       value: Canvas - Main menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 4691682898178697154, guid: cab916bdb3ce4284d8841d2d8376a724, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6702570074451872353, guid: cab916bdb3ce4284d8841d2d8376a724, type: 3}
       propertyPath: m_Pivot.x

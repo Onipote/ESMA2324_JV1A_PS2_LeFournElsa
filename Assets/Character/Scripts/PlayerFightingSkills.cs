@@ -62,7 +62,6 @@ public class PlayerFightingSkills : MonoBehaviour
         {
             leftHitbox.SetActive(true);
         }
-        Debug.Log("mouse right"+IsMouseOnRight());
         baseScratch = UnityEngine.Random.Range(15, 70);
         currentDamage += baseScratch;
         Debug.Log("Base attack " + baseScratch);
