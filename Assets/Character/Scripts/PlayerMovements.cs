@@ -126,6 +126,7 @@ public class PlayerMovements : MonoBehaviour
         {
             currentSpeed = baseSpeed;
             anim.SetBool("walking", false);
+            anim.SetBool("running", true);
 
         }
 
@@ -134,6 +135,7 @@ public class PlayerMovements : MonoBehaviour
         {
             if (isGrounded || jumpCounter < 2) //2 = max jumps
             {
+                anim.SetBool("jumping", true);
                 Grav();
                 rb.velocity = new Vector2(rb.velocity.x, currentJump);
                 jumpCounter++;

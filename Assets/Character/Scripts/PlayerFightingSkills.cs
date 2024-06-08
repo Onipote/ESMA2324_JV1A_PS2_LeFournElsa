@@ -62,7 +62,7 @@ public class PlayerFightingSkills : MonoBehaviour
         {
             leftHitbox.SetActive(true);
         }
-
+        Debug.Log("mouse right"+IsMouseOnRight());
         baseScratch = UnityEngine.Random.Range(15, 70);
         currentDamage += baseScratch;
         Debug.Log("Base attack " + baseScratch);
@@ -85,7 +85,7 @@ public class PlayerFightingSkills : MonoBehaviour
         {
             leftHitbox.SetActive(true);
         }
-
+        Debug.Log(IsMouseOnRight());
         heavyScratch = UnityEngine.Random.Range(45, 100);
         currentDamage += heavyScratch;
         Debug.Log("Heavy attack " + heavyScratch);
@@ -94,8 +94,9 @@ public class PlayerFightingSkills : MonoBehaviour
 
     private bool IsMouseOnRight()
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        return mousePosition.x > transform.position.x;
+        Vector3 mousePosition = Input.mousePosition;
+        Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.position);
+        return mousePosition.x > playerPos.x;
     }
 
     public void DisableHitboxes()
