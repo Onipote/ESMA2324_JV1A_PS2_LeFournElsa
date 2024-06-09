@@ -9,6 +9,7 @@ public class DashPowerUp : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerMovements.instance.SetPowerUpFound(true);
+            FindObjectOfType<Info>().DisplayInfo("Press E to dash");
             Destroy(gameObject);
         }
     }

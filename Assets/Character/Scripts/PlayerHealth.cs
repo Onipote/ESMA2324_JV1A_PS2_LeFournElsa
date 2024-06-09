@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     public static PlayerHealth instance;
-    private Animator anim;
+    public Animator anim;
 
     [Header("Player's health system)")]
     public float maxHealth = 100;
@@ -33,6 +33,7 @@ public class PlayerHealth : MonoBehaviour
         {
             instance = this;
         }
+        anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -87,8 +88,8 @@ public class PlayerHealth : MonoBehaviour
 
             if (currentHealth <= 0)
             {
+                anim.SetTrigger("dying");
                 PlayerMovements.instance.rb.transform.position = startRespawn; //respawn
-                anim.SetBool("dying", (currentHealth<=0));
                 Debug.Log("GAME OVER !!"); //end message
                 currentHealth = maxHealth; //reset health
             }

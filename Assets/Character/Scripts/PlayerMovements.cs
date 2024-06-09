@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlayerMovements : MonoBehaviour
 {
     public static PlayerMovements instance;
+    public Transform checkpoint1;
+    public Transform checkpoint2;
+    public Transform checkpoint3;
 
     [Header("Basic settings")]
     public Rigidbody2D rb;
@@ -64,7 +67,7 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private float wallSlideSpeed;
     [SerializeField] private bool isWalled;
-    //[SerializeField] private bool isWallSliding;
+    [SerializeField] private bool isWallSliding;
 
     private void Awake()
     {
@@ -117,6 +120,19 @@ public class PlayerMovements : MonoBehaviour
         FlipSpriteBasedOnDirection(horizontal);
         ProcessWallSlide();
 
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            rb.transform.position = checkpoint1.transform.position;
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            rb.transform.position = checkpoint2.transform.position;
+        }
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            rb.transform.position = checkpoint3.transform.position;
+        }
+
         //Cat walk
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -153,6 +169,7 @@ public class PlayerMovements : MonoBehaviour
         if (powerUpFound && Input.GetKeyDown(KeyCode.E) && canDash)
         {
             StartCoroutine(Dash());
+            anim.SetTrigger("dashing");
         }
 
         //TIMER WATER
@@ -292,12 +309,14 @@ public class PlayerMovements : MonoBehaviour
     {
         if (!isGrounded && isWalled)
         {
-            //isWallSliding = true;
+            isWallSliding = true;
+            anim.SetBool("wallsliding", true);
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -wallSlideSpeed));
         }
         else
         {
-            //isWallSliding = false;
+            anim.SetBool("wallsliding", false);
+            isWallSliding = false;
         }
     }
 

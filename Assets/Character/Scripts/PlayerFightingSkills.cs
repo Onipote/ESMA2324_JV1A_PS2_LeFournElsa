@@ -31,6 +31,8 @@ public class PlayerFightingSkills : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -56,6 +58,7 @@ public class PlayerFightingSkills : MonoBehaviour
 
     public void baseS_Attack()
     {
+        anim.SetTrigger("attacking1");
         if (IsMouseOnRight())
         {
             rightHitbox.SetActive(true);
@@ -78,6 +81,7 @@ public class PlayerFightingSkills : MonoBehaviour
 
     public void heavyS_Attack()
     {
+        anim.SetTrigger("attacking2");
         if (IsMouseOnRight())
         {
             rightHitbox.SetActive(true);

@@ -9,6 +9,7 @@ public class ClawGlovesPowerUp : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerFightingSkills.instance.SetPowerUpFound2(true);
+            FindObjectOfType<Info>().DisplayInfo("Press Shift + Mouse 0 to do a heavy attack");
             Destroy(gameObject);
         }
     }

@@ -121,6 +121,7 @@ public class PlayerCoatSystem : MonoBehaviour
 
     public void StartTimer(float duration)
     {
+        duration = 10f;
         timeRemaining = duration;
         isDarkTimerRunning = true;
     }
