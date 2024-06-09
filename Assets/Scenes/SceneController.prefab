@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2644360031329617853}
   - component: {fileID: 4667796519137679311}
   - component: {fileID: 5672607505962879357}
+  - component: {fileID: 3531816776849194527}
   m_Layer: 0
   m_Name: SceneController
   m_TagString: Untagged
@@ -84,4 +85,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameIsPaused: 0
-  pauseMenu: {fileID: 383456475078730795, guid: 5d9dd21eeae656d4d927fa55d796fa2b, type: 3}
+  pauseMenu: {fileID: 0}
+--- !u!114 &3531816776849194527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7607916472093422106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1bf7381ddf84b74a81a9810062b56ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gemText: {fileID: 0}

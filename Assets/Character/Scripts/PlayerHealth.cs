@@ -24,6 +24,8 @@ public class PlayerHealth : MonoBehaviour
     private Color originalColor;
 
     [SerializeField] private Vector3 startRespawn;
+
+    [Header("Health Gem")]
     public GameObject lootMob;
     public int gemCounter = 0;
     public bool gem = false;
@@ -70,6 +72,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("HealthGem"))
         {
+            FindObjectOfType<Info>().DisplayInfo("Press Mouse 1 to use the health gem");
             Destroy(collision.gameObject);
             gemCounter++;
         }
@@ -89,7 +92,7 @@ public class PlayerHealth : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                StartCoroutine(DieAndRespawn());
+                anim.SetTrigger("dying");
             }
         }
     }
@@ -101,12 +104,8 @@ public class PlayerHealth : MonoBehaviour
         invulnerabilityTimer = invulnerabilityDuration;
     }
 
-    private IEnumerator DieAndRespawn()
+    private void Respawn()
     {
-        anim.SetTrigger("dying");
-
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length); //waiting the end of the animation
-
         //Respawn
         PlayerMovements.instance.rb.transform.position = startRespawn; //respawn
         Debug.Log("GAME OVER !!"); //end message
