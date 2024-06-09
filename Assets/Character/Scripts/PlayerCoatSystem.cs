@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerCoatSystem : MonoBehaviour
 {
     public static PlayerCoatSystem instance;
+    public Animator anim;
 
     [Header("Coat system")]
     [SerializeField] private Light2D coat;
@@ -35,6 +36,7 @@ public class PlayerCoatSystem : MonoBehaviour
         {
             instance = this;
         }
+        anim = GetComponent<Animator>();
     }
 
     private void Start()

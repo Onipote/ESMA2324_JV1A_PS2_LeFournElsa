@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -88,10 +89,7 @@ public class PlayerHealth : MonoBehaviour
 
             if (currentHealth <= 0)
             {
-                anim.SetTrigger("dying");
-                PlayerMovements.instance.rb.transform.position = startRespawn; //respawn
-                Debug.Log("GAME OVER !!"); //end message
-                currentHealth = maxHealth; //reset health
+                StartCoroutine(DieAndRespawn());
             }
         }
     }
@@ -101,5 +99,17 @@ public class PlayerHealth : MonoBehaviour
         isInvulnerable = true;
         spriteRenderer.color = invulnerableColor;
         invulnerabilityTimer = invulnerabilityDuration;
+    }
+
+    private IEnumerator DieAndRespawn()
+    {
+        anim.SetTrigger("dying");
+
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length); //waiting the end of the animation
+
+        //Respawn
+        PlayerMovements.instance.rb.transform.position = startRespawn; //respawn
+        Debug.Log("GAME OVER !!"); //end message
+        currentHealth = maxHealth; //reset health
     }
 }
